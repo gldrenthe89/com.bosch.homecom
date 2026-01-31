@@ -4,5 +4,8 @@
   },
   "1.0.1": {
     "en": "implement sync lock for Bosch K30/K40 devices"
+  },
+  "1.0.2": {
+    "en": "Implement poll lock to prevent concurrent `syncDeviceState` calls for Bosch K30/K40 devices"
   }
 }
