@@ -33,6 +33,7 @@ class K30K40Device extends OAuth2Device<BoschHomeComOAuth2Client> {
   private pollInterval: NodeJS.Timeout | null = null;
   private previousSystemPressure: number | null = null;
   private isSyncing: boolean = false;
+  private isPolling: boolean = false;
 
   async onOAuth2Init(): Promise<void> {
     this.api = new HomeComApi(this.oAuth2Client);
@@ -85,7 +86,12 @@ class K30K40Device extends OAuth2Device<BoschHomeComOAuth2Client> {
   private startPolling(): void {
     const interval = (this.getSetting('poll_interval') as number) || DEFAULT_POLL_INTERVAL;
     this.pollInterval = setInterval(() => {
-      this.syncDeviceState().catch(this.error);
+      this.isPolling = true;
+      this.syncDeviceState()
+        .catch(this.error)
+        .finally(() => {
+          this.isPolling = false;
+        });
     }, interval);
   }
 
@@ -324,7 +330,9 @@ class K30K40Device extends OAuth2Device<BoschHomeComOAuth2Client> {
       throw new Error(`Failed to set thermostat mode to ${value}`);
     }
 
-    await this.syncDeviceState();
+    if (!this.isPolling) {
+      await this.syncDeviceState();
+    }
   }
 
   private async onTargetTemperatureChanged(value: number): Promise<void> {
@@ -332,7 +340,9 @@ class K30K40Device extends OAuth2Device<BoschHomeComOAuth2Client> {
     if (!success) {
       throw new Error(`Failed to set target temperature to ${value}`);
     }
-    await this.syncDeviceState();
+    if (!this.isPolling) {
+      await this.syncDeviceState();
+    }
   }
 
   private async onDhwModeChanged(value: string): Promise<void> {
@@ -340,11 +350,12 @@ class K30K40Device extends OAuth2Device<BoschHomeComOAuth2Client> {
     if (!success) {
       throw new Error(`Failed to set DHW mode to ${value}`);
     }
-    await this.syncDeviceState();
-
-    const actualValue = this.getCapabilityValue('dhw_operation_mode');
-    if (actualValue !== value) {
-      throw new Error(`Failed to set DHW mode to ${value}`);
+    if (!this.isPolling) {
+      await this.syncDeviceState();
+      const actualValue = this.getCapabilityValue('dhw_operation_mode');
+      if (actualValue !== value) {
+        throw new Error(`Failed to set DHW mode to ${value}`);
+      }
     }
   }
 
@@ -353,7 +364,9 @@ class K30K40Device extends OAuth2Device<BoschHomeComOAuth2Client> {
     if (!success) {
       throw new Error(`Failed to set DHW temperature to ${value}`);
     }
-    await this.syncDeviceState();
+    if (!this.isPolling) {
+      await this.syncDeviceState();
+    }
   }
 
   private async onDhwBoostChanged(value: boolean): Promise<void> {
@@ -362,7 +375,9 @@ class K30K40Device extends OAuth2Device<BoschHomeComOAuth2Client> {
     } else {
       await this.stopDhwCharge();
     }
-    await this.syncDeviceState();
+    if (!this.isPolling) {
+      await this.syncDeviceState();
+    }
   }
 
   async startDhwCharge(durationMinutes?: number): Promise<void> {
