@@ -54,8 +54,6 @@
     .loading {
       color: #666;
       font-style: italic;
-      text-align: center;
-      padding: 20px;
     }
     .expires-info {
       font-size: 13px;
@@ -70,14 +68,77 @@
       border-left: 4px solid #2196F3;
       font-size: 14px;
     }
-    .warning-box {
-      background: #fff3e0;
-      padding: 15px;
-      border-radius: 8px;
-      margin-top: 15px;
-      border-left: 4px solid #ff9800;
+    .step {
+      margin-bottom: 15px;
+    }
+    .step-number {
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      background: #007AFF;
+      color: white;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 24px;
+      margin-right: 10px;
+      font-weight: bold;
       font-size: 14px;
     }
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      margin-top: 10px;
+      box-sizing: border-box;
+    }
+    .url-box {
+      background: #f5f5f5;
+      padding: 12px;
+      border-radius: 8px;
+      margin: 10px 0;
+      word-break: break-all;
+      font-size: 11px;
+      font-family: monospace;
+      max-height: 80px;
+      overflow-y: auto;
+      user-select: all;
+      cursor: text;
+    }
+    button {
+      background: #007AFF;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    button:disabled {
+      background: #ccc;
+    }
+    button.secondary {
+      background: #666;
+    }
+    button.copy-btn {
+      background: #4CAF50;
+      padding: 8px 16px;
+      font-size: 14px;
+    }
+    .error {
+      color: #d32f2f;
+      margin-top: 10px;
+    }
+    .success {
+      color: #2e7d32;
+      background: #e8f5e9;
+      padding: 12px;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+    .hidden { display: none; }
   </style>
 </head>
 <body>
@@ -86,31 +147,74 @@
 
     <div id="loading-status" class="loading">Status laden...</div>
 
-    <div id="status-content" style="display: none;">
+    <div id="status-content" class="hidden">
       <div class="status-row">
         <span class="status-label">Status:</span>
         <span class="status-value" id="auth-status">Onbekend</span>
       </div>
       <div id="expires-info" class="expires-info"></div>
-      <div id="help-box"></div>
+    </div>
+  </div>
+
+  <div id="reauth-section" class="section hidden">
+    <div class="section-title">Opnieuw Inloggen</div>
+
+    <div id="reauth-start">
+      <p>Je kunt opnieuw inloggen bij Bosch HomeCom om je authenticatie te vernieuwen.</p>
+      <button id="startReauthBtn">Start Opnieuw Inloggen</button>
+    </div>
+
+    <div id="reauth-steps" class="hidden">
+      <div class="step">
+        <span class="step-number">1</span>
+        <span>Kopieer de login URL en open deze in je browser:</span>
+        <div class="url-box" id="authUrl">https://singlekey-id.com/auth/connect/authorize?state=nKqS17oMAxqUsQpMznajIr&nonce=5yPvyTqMS3iPb4c8RfGJg1&code_challenge=Fc6eY3uMBJkFqa4VqcULuLuKC5Do70XMw7oa_Pxafw0&redirect_uri=com.bosch.tt.dashtt.pointt://app/login&client_id=762162C0-FA2D-4540-AE66-6489F189FADC&response_type=code&prompt=login&scope=openid+email+profile+offline_access+pointt.gateway.claiming+pointt.gateway.removal+pointt.gateway.list+pointt.gateway.users+pointt.gateway.resource.dashapp+pointt.castt.flow.token-exchange+bacon+hcc.tariff.read&code_challenge_method=S256&style_id=tt_bsch</div>
+        <button id="copyUrlBtn" class="copy-btn">Kopieer URL</button>
+      </div>
+
+      <div class="step">
+        <span class="step-number">2</span>
+        <span>Log in met je Bosch HomeCom Easy account</span>
+      </div>
+
+      <div class="step">
+        <span class="step-number">3</span>
+        <span>Na het inloggen zie je een pagina die niet kan laden. Kopieer de code uit de URL:</span>
+        <div class="info-box">
+          <small>De URL ziet er zo uit:</small><br>
+          <code>com.bosch.tt.dashtt.pointt://app/login?code=<strong>XXXXXX-1</strong></code><br>
+          <small>Kopieer de code na "code=" (eindigt met -1)</small>
+        </div>
+      </div>
+
+      <div class="step">
+        <span class="step-number">4</span>
+        <span>Plak de code hieronder:</span>
+        <input type="text" id="authCode" placeholder="bijv. abc123-1" autocomplete="off">
+      </div>
+
+      <p id="error" class="error hidden"></p>
+      <p id="success" class="success hidden"></p>
+
+      <button id="submitBtn" disabled>Verifieer & Opslaan</button>
+      <button id="cancelBtn" class="secondary">Annuleren</button>
     </div>
   </div>
 
   <script>
     function onHomeyReady(Homey) {
       function updateStatus() {
-        document.getElementById('loading-status').style.display = 'block';
-        document.getElementById('status-content').style.display = 'none';
+        document.getElementById('loading-status').classList.remove('hidden');
+        document.getElementById('status-content').classList.add('hidden');
 
         Homey.get('oauth_token', function(err, tokenJson) {
-          document.getElementById('loading-status').style.display = 'none';
-          document.getElementById('status-content').style.display = 'block';
+          document.getElementById('loading-status').classList.add('hidden');
+          document.getElementById('status-content').classList.remove('hidden');
 
           if (err || !tokenJson) {
             setStatus('unknown', 'Niet ingelogd');
             document.getElementById('expires-info').textContent = '';
-            document.getElementById('help-box').innerHTML =
-              '<div class="info-box">Voeg een apparaat toe om in te loggen bij Bosch HomeCom.</div>';
+            showReauthSection();
             return;
           }
 
@@ -118,40 +222,35 @@
             var token = JSON.parse(tokenJson);
             if (!token.access_token) {
               setStatus('unknown', 'Niet ingelogd');
-              document.getElementById('expires-info').textContent = '';
-              document.getElementById('help-box').innerHTML =
-                '<div class="info-box">Voeg een apparaat toe om in te loggen bij Bosch HomeCom.</div>';
+              showReauthSection();
               return;
             }
 
-            var isValid = true;
             var expiresAt = null;
+            var isTokenValid = true;
 
             if (token.expires_in && token.stored_at) {
               expiresAt = token.stored_at + (token.expires_in * 1000);
               if (Date.now() > expiresAt - 300000) {
-                isValid = false;
+                isTokenValid = false;
               }
             }
 
-            if (isValid) {
+            if (isTokenValid) {
               setStatus('valid', 'Geldig');
               if (expiresAt) {
                 var expiresDate = new Date(expiresAt);
                 document.getElementById('expires-info').textContent =
                   'Verloopt: ' + expiresDate.toLocaleString('nl-NL');
               }
-              document.getElementById('help-box').innerHTML = '';
             } else {
               setStatus('expired', 'Verlopen');
               document.getElementById('expires-info').textContent = '';
-              document.getElementById('help-box').innerHTML =
-                '<div class="warning-box"><strong>Token verlopen</strong><br>Ga naar een apparaat → Instellingen → Repareren om opnieuw in te loggen.</div>';
             }
+            showReauthSection();
           } catch (e) {
             setStatus('unknown', 'Fout bij lezen status');
-            document.getElementById('expires-info').textContent = '';
-            document.getElementById('help-box').innerHTML = '';
+            showReauthSection();
           }
         });
       }
@@ -161,6 +260,98 @@
         statusEl.textContent = text;
         statusEl.className = 'status-value status-' + type;
       }
+
+      function showReauthSection() {
+        document.getElementById('reauth-section').classList.remove('hidden');
+      }
+
+      function showError(message) {
+        var errorEl = document.getElementById('error');
+        errorEl.textContent = message;
+        errorEl.classList.remove('hidden');
+        document.getElementById('success').classList.add('hidden');
+      }
+
+      function showSuccess(message) {
+        var successEl = document.getElementById('success');
+        successEl.textContent = message;
+        successEl.classList.remove('hidden');
+        document.getElementById('error').classList.add('hidden');
+      }
+
+      function resetReauthUI() {
+        document.getElementById('reauth-start').classList.remove('hidden');
+        document.getElementById('reauth-steps').classList.add('hidden');
+        document.getElementById('authCode').value = '';
+        document.getElementById('error').classList.add('hidden');
+        document.getElementById('success').classList.add('hidden');
+        document.getElementById('submitBtn').disabled = true;
+        document.getElementById('submitBtn').textContent = 'Verifieer & Opslaan';
+      }
+
+      // Start reauth button - just show the steps (URL is hardcoded)
+      document.getElementById('startReauthBtn').addEventListener('click', function() {
+        document.getElementById('reauth-start').classList.add('hidden');
+        document.getElementById('reauth-steps').classList.remove('hidden');
+      });
+
+      // Copy URL button
+      document.getElementById('copyUrlBtn').addEventListener('click', function() {
+        var urlText = document.getElementById('authUrl').textContent;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(urlText).then(function() {
+            document.getElementById('copyUrlBtn').textContent = 'Gekopieerd!';
+            setTimeout(function() {
+              document.getElementById('copyUrlBtn').textContent = 'Kopieer URL';
+            }, 2000);
+          });
+        } else {
+          var range = document.createRange();
+          range.selectNodeContents(document.getElementById('authUrl'));
+          var selection = window.getSelection();
+          selection.removeAllRanges();
+          selection.addRange(range);
+          document.getElementById('copyUrlBtn').textContent = 'Geselecteerd';
+          setTimeout(function() {
+            document.getElementById('copyUrlBtn').textContent = 'Kopieer URL';
+          }, 2000);
+        }
+      });
+
+      // Auth code input
+      document.getElementById('authCode').addEventListener('input', function() {
+        document.getElementById('submitBtn').disabled = !this.value.trim();
+        document.getElementById('error').classList.add('hidden');
+      });
+
+      // Submit button
+      document.getElementById('submitBtn').addEventListener('click', function() {
+        var code = document.getElementById('authCode').value.trim();
+        if (!code) return;
+
+        this.disabled = true;
+        this.textContent = 'Verifiëren...';
+
+        Homey.api('POST', '/reauthorize', { code: code }, function(err, result) {
+          if (err) {
+            showError(err.message || 'Inloggen mislukt');
+            document.getElementById('submitBtn').disabled = false;
+            document.getElementById('submitBtn').textContent = 'Verifieer & Opslaan';
+            return;
+          }
+
+          showSuccess('Succesvol opnieuw ingelogd!');
+          setTimeout(function() {
+            resetReauthUI();
+            updateStatus();
+          }, 2000);
+        });
+      });
+
+      // Cancel button
+      document.getElementById('cancelBtn').addEventListener('click', function() {
+        resetReauthUI();
+      });
 
       updateStatus();
       Homey.ready();

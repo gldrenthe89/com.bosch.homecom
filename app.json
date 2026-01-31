@@ -50,6 +50,12 @@
     "email": "developer@example.com"
   },
   "support": "mailto:developer@example.com",
+  "api": {
+    "reauthorize": {
+      "method": "POST",
+      "path": "/reauthorize"
+    }
+  },
   "flow": {
     "triggers": [
       {
@@ -1180,11 +1186,6 @@
         {
           "id": "add_devices",
           "template": "add_devices"
-        }
-      ],
-      "repair": [
-        {
-          "id": "repair"
         }
       ],
       "id": "k30-k40"

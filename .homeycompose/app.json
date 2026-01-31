@@ -48,5 +48,11 @@
     "name": "Geert Lucas Drenthe",
     "email": "developer@example.com"
   },
-  "support": "mailto:developer@example.com"
+  "support": "mailto:developer@example.com",
+  "api": {
+    "reauthorize": {
+      "method": "POST",
+      "path": "/reauthorize"
+    }
+  }
 }

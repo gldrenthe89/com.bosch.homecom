@@ -35,10 +35,6 @@ interface PairSession {
   showView(viewId: string): Promise<void>;
 }
 
-interface RepairSession {
-  setHandler(event: string, handler: (data?: unknown) => Promise<unknown>): void;
-  done(): void;
-}
 
 class K30K40Driver extends OAuth2Driver<BoschHomeComOAuth2Client> {
   // Flow trigger cards
@@ -336,49 +332,6 @@ class K30K40Driver extends OAuth2Driver<BoschHomeComOAuth2Client> {
     return devices;
   }
 
-  /**
-   * Handle device repair - reauthorize when token expires
-   */
-  async onRepair(session: RepairSession): Promise<void> {
-    const app = this.homey.app as unknown as BoschHomeComApp;
-    let oAuth2Client: BoschHomeComOAuth2Client | null = null;
-
-    session.setHandler('getAuthUrl', async () => {
-      const OAuth2ConfigId = this.getOAuth2ConfigId();
-      const OAuth2SessionId = Math.random().toString(36).substring(2);
-
-      oAuth2Client = await this.homey.app.createOAuth2Client({
-        sessionId: OAuth2SessionId,
-        configId: OAuth2ConfigId,
-      }) as BoschHomeComOAuth2Client;
-
-      return oAuth2Client.getManualAuthorizationUrl();
-    });
-
-    session.setHandler('login', async (data) => {
-      if (!oAuth2Client) {
-        throw new Error('OAuth2 client not initialized');
-      }
-
-      const loginData = data as { code: string };
-      const code = loginData.code.trim();
-      if (!code) {
-        throw new Error('Authorization code is required');
-      }
-
-      try {
-        const token = await oAuth2Client.exchangeCodeForToken(code);
-        app.storeToken(token);
-
-        (oAuth2Client as any).setToken({ token });
-        await oAuth2Client.save();
-        return true;
-      } catch (error) {
-        this.error('Repair login failed:', error);
-        throw error;
-      }
-    });
-  }
 }
 
 module.exports = K30K40Driver;

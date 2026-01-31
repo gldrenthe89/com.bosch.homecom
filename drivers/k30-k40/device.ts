@@ -239,7 +239,7 @@ class K30K40Device extends OAuth2Device<BoschHomeComOAuth2Client> {
                           errorMessage.includes('expired');
 
       if (isAuthError) {
-        await this.setUnavailable('Authenticatie verlopen. Ga naar apparaat instellingen → Repareren om opnieuw in te loggen.');
+        await this.setUnavailable('Authenticatie verlopen. Ga naar App Instellingen om opnieuw in te loggen.');
       } else {
         await this.setUnavailable('Kan niet communiceren met apparaat');
       }
