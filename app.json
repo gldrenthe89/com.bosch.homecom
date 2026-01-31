@@ -1182,6 +1182,11 @@
           "template": "add_devices"
         }
       ],
+      "repair": [
+        {
+          "id": "repair"
+        }
+      ],
       "id": "k30-k40"
     }
   ],

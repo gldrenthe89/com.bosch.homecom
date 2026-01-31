@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script type="text/javascript" src="/homey.js" data-origin="settings"></script>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      padding: 20px;
+      line-height: 1.6;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .section {
+      margin-bottom: 30px;
+      padding: 20px;
+      background: #f9f9f9;
+      border-radius: 12px;
+    }
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 15px;
+      color: #333;
+    }
+    .status-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .status-label {
+      font-weight: 500;
+      margin-right: 10px;
+    }
+    .status-value {
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .status-valid {
+      background: #e8f5e9;
+      color: #2e7d32;
+    }
+    .status-expired {
+      background: #ffebee;
+      color: #c62828;
+    }
+    .status-unknown {
+      background: #f5f5f5;
+      color: #757575;
+    }
+    .loading {
+      color: #666;
+      font-style: italic;
+      text-align: center;
+      padding: 20px;
+    }
+    .expires-info {
+      font-size: 13px;
+      color: #666;
+      margin-top: 10px;
+    }
+    .info-box {
+      background: #e3f2fd;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 15px;
+      border-left: 4px solid #2196F3;
+      font-size: 14px;
+    }
+    .warning-box {
+      background: #fff3e0;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 15px;
+      border-left: 4px solid #ff9800;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="section">
+    <div class="section-title">Authenticatie Status</div>
+
+    <div id="loading-status" class="loading">Status laden...</div>
+
+    <div id="status-content" style="display: none;">
+      <div class="status-row">
+        <span class="status-label">Status:</span>
+        <span class="status-value" id="auth-status">Onbekend</span>
+      </div>
+      <div id="expires-info" class="expires-info"></div>
+      <div id="help-box"></div>
+    </div>
+  </div>
+
+  <script>
+    function onHomeyReady(Homey) {
+      function updateStatus() {
+        document.getElementById('loading-status').style.display = 'block';
+        document.getElementById('status-content').style.display = 'none';
+
+        Homey.get('oauth_token', function(err, tokenJson) {
+          document.getElementById('loading-status').style.display = 'none';
+          document.getElementById('status-content').style.display = 'block';
+
+          if (err || !tokenJson) {
+            setStatus('unknown', 'Niet ingelogd');
+            document.getElementById('expires-info').textContent = '';
+            document.getElementById('help-box').innerHTML =
+              '<div class="info-box">Voeg een apparaat toe om in te loggen bij Bosch HomeCom.</div>';
+            return;
+          }
+
+          try {
+            var token = JSON.parse(tokenJson);
+            if (!token.access_token) {
+              setStatus('unknown', 'Niet ingelogd');
+              document.getElementById('expires-info').textContent = '';
+              document.getElementById('help-box').innerHTML =
+                '<div class="info-box">Voeg een apparaat toe om in te loggen bij Bosch HomeCom.</div>';
+              return;
+            }
+
+            var isValid = true;
+            var expiresAt = null;
+
+            if (token.expires_in && token.stored_at) {
+              expiresAt = token.stored_at + (token.expires_in * 1000);
+              if (Date.now() > expiresAt - 300000) {
+                isValid = false;
+              }
+            }
+
+            if (isValid) {
+              setStatus('valid', 'Geldig');
+              if (expiresAt) {
+                var expiresDate = new Date(expiresAt);
+                document.getElementById('expires-info').textContent =
+                  'Verloopt: ' + expiresDate.toLocaleString('nl-NL');
+              }
+              document.getElementById('help-box').innerHTML = '';
+            } else {
+              setStatus('expired', 'Verlopen');
+              document.getElementById('expires-info').textContent = '';
+              document.getElementById('help-box').innerHTML =
+                '<div class="warning-box"><strong>Token verlopen</strong><br>Ga naar een apparaat → Instellingen → Repareren om opnieuw in te loggen.</div>';
+            }
+          } catch (e) {
+            setStatus('unknown', 'Fout bij lezen status');
+            document.getElementById('expires-info').textContent = '';
+            document.getElementById('help-box').innerHTML = '';
+          }
+        });
+      }
+
+      function setStatus(type, text) {
+        var statusEl = document.getElementById('auth-status');
+        statusEl.textContent = text;
+        statusEl.className = 'status-value status-' + type;
+      }
+
+      updateStatus();
+      Homey.ready();
+    }
+  </script>
+</body>
+</html>

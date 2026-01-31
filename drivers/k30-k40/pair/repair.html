@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    .step {
+      margin-bottom: 20px;
+    }
+    .step-number {
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      background: #007AFF;
+      color: white;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 24px;
+      margin-right: 10px;
+      font-weight: bold;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      margin-top: 10px;
+      box-sizing: border-box;
+    }
+    .error {
+      color: #d32f2f;
+      margin-top: 10px;
+      display: none;
+    }
+    .success {
+      color: #2e7d32;
+      background: #e8f5e9;
+      padding: 12px;
+      border-radius: 8px;
+      margin-top: 10px;
+      display: none;
+    }
+    .url-box {
+      background: #f5f5f5;
+      padding: 12px;
+      border-radius: 8px;
+      margin: 10px 0;
+      word-break: break-all;
+      font-size: 12px;
+      font-family: monospace;
+      max-height: 100px;
+      overflow-y: auto;
+      user-select: all;
+      cursor: text;
+    }
+    button {
+      background: #007AFF;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    button:disabled {
+      background: #ccc;
+    }
+    .info-box {
+      background: #e3f2fd;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 15px 0;
+      border-left: 4px solid #2196F3;
+    }
+    .warning-box {
+      background: #fff3e0;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 15px 0;
+      border-left: 4px solid #ff9800;
+    }
+    .copy-btn {
+      background: #4CAF50;
+      margin-left: 10px;
+      padding: 8px 16px;
+      font-size: 14px;
+    }
+    .loading {
+      display: none;
+      color: #666;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <div id="repair">
+    <h2>Opnieuw Inloggen bij Bosch</h2>
+
+    <div class="warning-box">
+      <strong>Authenticatie verlopen</strong><br>
+      Je Bosch HomeCom authenticatie is verlopen of ongeldig. Log opnieuw in om je apparaat te blijven gebruiken.
+    </div>
+
+    <div class="step">
+      <span class="step-number">1</span>
+      <span>Kopieer de login URL hieronder en open deze in je browser:</span>
+      <p class="loading" id="loading">URL laden...</p>
+      <div class="url-box" id="authUrl" style="display: none;"></div>
+      <button id="copyUrlBtn" class="copy-btn" style="display: none;">Kopieer URL</button>
+    </div>
+
+    <div class="step">
+      <span class="step-number">2</span>
+      <span>Log in met je Bosch HomeCom Easy account</span>
+    </div>
+
+    <div class="step">
+      <span class="step-number">3</span>
+      <span>Na het inloggen zie je een pagina die niet kan laden. Kopieer de autorisatiecode uit de URL:</span>
+    </div>
+
+    <div class="info-box">
+      <small>De URL ziet er zo uit:</small><br>
+      <code>com.bosch.tt.dashtt.pointt://app/login?code=<strong>XXXXXX-1</strong></code><br>
+      <small>Kopieer de code na "code=" (eindigt met -1)</small>
+    </div>
+
+    <div class="step">
+      <span class="step-number">4</span>
+      <span>Plak de code hieronder:</span>
+      <input type="text" id="authCode" placeholder="bijv. abc123-1" autocomplete="off">
+    </div>
+
+    <p class="error" id="error"></p>
+    <p class="success" id="success"></p>
+
+    <button id="submitBtn" disabled>Verifieer & Repareer</button>
+  </div>
+
+  <script>
+    var authUrlReady = false;
+
+    // Show loading state
+    document.getElementById('loading').style.display = 'block';
+    document.getElementById('loading').textContent = 'Login URL laden...';
+
+    // Get auth URL
+    Homey.emit('getAuthUrl', {}, function(err, url) {
+      document.getElementById('loading').style.display = 'none';
+
+      if (err) {
+        showError(err.message || 'Kon login URL niet ophalen');
+        return;
+      }
+
+      if (url) {
+        authUrlReady = true;
+        document.getElementById('authUrl').textContent = url;
+        document.getElementById('authUrl').style.display = 'block';
+        document.getElementById('copyUrlBtn').style.display = 'inline-block';
+      }
+    });
+
+    document.getElementById('copyUrlBtn').addEventListener('click', function() {
+      var urlText = document.getElementById('authUrl').textContent;
+
+      // Try to copy to clipboard
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(urlText).then(function() {
+          document.getElementById('copyUrlBtn').textContent = 'Gekopieerd!';
+          setTimeout(function() {
+            document.getElementById('copyUrlBtn').textContent = 'Kopieer URL';
+          }, 2000);
+        }).catch(function() {
+          fallbackCopy(urlText);
+        });
+      } else {
+        fallbackCopy(urlText);
+      }
+    });
+
+    function fallbackCopy(text) {
+      // Fallback: select the text
+      var urlBox = document.getElementById('authUrl');
+      var range = document.createRange();
+      range.selectNodeContents(urlBox);
+      var selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+
+      document.getElementById('copyUrlBtn').textContent = 'Geselecteerd - kopieer handmatig';
+      setTimeout(function() {
+        document.getElementById('copyUrlBtn').textContent = 'Kopieer URL';
+      }, 3000);
+    }
+
+    document.getElementById('authCode').addEventListener('input', function() {
+      var code = this.value.trim();
+      document.getElementById('submitBtn').disabled = !code;
+      document.getElementById('error').style.display = 'none';
+    });
+
+    document.getElementById('submitBtn').addEventListener('click', function() {
+      var code = document.getElementById('authCode').value.trim();
+      if (!code) return;
+
+      this.disabled = true;
+      this.textContent = 'Verifiëren...';
+
+      Homey.emit('login', { code: code }, function(err, result) {
+        if (err) {
+          showError(err.message || 'Inloggen mislukt');
+          document.getElementById('submitBtn').disabled = false;
+          document.getElementById('submitBtn').textContent = 'Verifieer & Repareer';
+          return;
+        }
+
+        // Show success message
+        document.getElementById('success').textContent = 'Succesvol opnieuw ingelogd! Het apparaat wordt nu hersteld...';
+        document.getElementById('success').style.display = 'block';
+
+        // Complete the repair
+        setTimeout(function() {
+          Homey.done();
+        }, 1500);
+      });
+    });
+
+    function showError(message) {
+      var errorEl = document.getElementById('error');
+      errorEl.textContent = message;
+      errorEl.style.display = 'block';
+    }
+  </script>
+</body>
+</html>

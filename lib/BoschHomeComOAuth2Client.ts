@@ -19,6 +19,88 @@ interface TokenResponse {
   expires_in?: number;
 }
 
+/**
+ * Make an HTTPS request (standalone function for use outside OAuth2Client)
+ */
+function doHttpRequest(url: string, options: {
+  method: string;
+  headers: Record<string, string>;
+  body?: string;
+}): Promise<{ status: number; body: string }> {
+  return new Promise((resolve, reject) => {
+    const urlObj = new URL(url);
+    const req = https.request({
+      hostname: urlObj.hostname,
+      port: 443,
+      path: urlObj.pathname + urlObj.search,
+      method: options.method,
+      headers: options.headers,
+    }, (res) => {
+      let data = '';
+      res.on('data', chunk => { data += chunk; });
+      res.on('end', () => {
+        resolve({ status: res.statusCode || 500, body: data });
+      });
+    });
+
+    req.on('error', reject);
+
+    if (options.body) {
+      req.write(options.body);
+    }
+    req.end();
+  });
+}
+
+/**
+ * Get the authorization URL for manual login flow (standalone function)
+ */
+export function getManualAuthorizationUrl(): string {
+  return 'https://singlekey-id.com/auth/connect/authorize?state=nKqS17oMAxqUsQpMznajIr&nonce=5yPvyTqMS3iPb4c8RfGJg1&code_challenge=Fc6eY3uMBJkFqa4VqcULuLuKC5Do70XMw7oa_Pxafw0&redirect_uri=com.bosch.tt.dashtt.pointt://app/login&client_id=762162C0-FA2D-4540-AE66-6489F189FADC&response_type=code&prompt=login&scope=openid+email+profile+offline_access+pointt.gateway.claiming+pointt.gateway.removal+pointt.gateway.list+pointt.gateway.users+pointt.gateway.resource.dashapp+pointt.castt.flow.token-exchange+bacon+hcc.tariff.read&code_challenge_method=S256&style_id=tt_bsch';
+}
+
+/**
+ * Exchange authorization code for tokens (standalone function for use outside OAuth2Client)
+ */
+export async function exchangeCodeForToken(code: string): Promise<OAuth2Token> {
+  const tokenUrl = `${OAUTH_DOMAIN}${OAUTH_TOKEN_PATH}`;
+
+  const body = new URLSearchParams();
+  body.set('grant_type', 'authorization_code');
+  body.set('client_id', OAUTH_CLIENT_ID);
+  body.set('redirect_uri', OAUTH_REDIRECT_URI);
+  body.set('code', code);
+  body.set('code_verifier', OAUTH_BROWSER_VERIFIER);
+
+  const response = await doHttpRequest(tokenUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: body.toString(),
+  });
+
+  if (response.status !== 200) {
+    let errorMessage = 'Token exchange failed';
+    try {
+      const errorData = JSON.parse(response.body);
+      errorMessage = errorData.error_description || errorData.error || errorMessage;
+    } catch {
+      errorMessage = response.body || errorMessage;
+    }
+    throw new Error(errorMessage);
+  }
+
+  const tokenData: TokenResponse = JSON.parse(response.body);
+
+  return new OAuth2Token({
+    access_token: tokenData.access_token,
+    refresh_token: tokenData.refresh_token,
+    token_type: tokenData.token_type || 'Bearer',
+    expires_in: tokenData.expires_in,
+  });
+}
+
 export class BoschHomeComOAuth2Client extends OAuth2Client {
   // Required static properties for homey-oauth2app
   static API_URL = BOSCHCOM_DOMAIN;

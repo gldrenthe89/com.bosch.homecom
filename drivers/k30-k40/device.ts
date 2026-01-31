@@ -229,7 +229,20 @@ class K30K40Device extends OAuth2Device<BoschHomeComOAuth2Client> {
       this.log(`[SYNC] syncDeviceState COMPLETED`);
     } catch (error) {
       this.error('Failed to sync device state:', error);
-      await this.setUnavailable('Unable to communicate with device');
+
+      // Check if this is an auth error
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      const isAuthError = errorMessage.includes('401') ||
+                          errorMessage.includes('403') ||
+                          errorMessage.includes('Unauthorized') ||
+                          errorMessage.includes('token') ||
+                          errorMessage.includes('expired');
+
+      if (isAuthError) {
+        await this.setUnavailable('Authenticatie verlopen. Ga naar apparaat instellingen → Repareren om opnieuw in te loggen.');
+      } else {
+        await this.setUnavailable('Kan niet communiceren met apparaat');
+      }
     } finally {
       this.isUpdatingFromSync = false;
       this.isSyncing = false;
