@@ -16,5 +16,8 @@
   },
   "1.2.0": {
     "en": "Remove repair flow and replace with reauthorization via app settings for Bosch K30/K40 devices"
+  },
+  "1.2.1": {
+    "en": "app update"
   }
 }

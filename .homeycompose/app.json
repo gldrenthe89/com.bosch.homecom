@@ -1,6 +1,6 @@
 {
   "id": "com.bosch.homecom",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "platforms": [
@@ -45,10 +45,8 @@
     "xlarge": "/assets/images/xlarge.png"
   },
   "author": {
-    "name": "Geert Lucas Drenthe",
-    "email": "developer@example.com"
+    "name": "Geert Lucas"
   },
-  "support": "mailto:developer@example.com",
   "api": {
     "reauthorize": {
       "method": "POST",
