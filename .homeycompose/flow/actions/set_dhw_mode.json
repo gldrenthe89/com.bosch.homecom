@@ -1,0 +1,36 @@
+{
+  "title": {
+    "en": "Set hot water mode",
+    "nl": "Stel warm water modus in"
+  },
+  "titleFormatted": {
+    "en": "Set hot water mode to [[dhw_mode]]",
+    "nl": "Stel warm water modus in op [[dhw_mode]]"
+  },
+  "hint": {
+    "en": "Set the domestic hot water operation mode",
+    "nl": "Stel de warm water modus in"
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=k30-k40"
+    },
+    {
+      "type": "dropdown",
+      "name": "dhw_mode",
+      "title": {
+        "en": "Mode",
+        "nl": "Modus"
+      },
+      "values": [
+        { "id": "Off", "label": { "en": "Off", "nl": "Uit" } },
+        { "id": "eco", "label": { "en": "Eco+", "nl": "Eco+" } },
+        { "id": "low", "label": { "en": "Eco", "nl": "Eco" } },
+        { "id": "high", "label": { "en": "Comfort", "nl": "Comfort" } },
+        { "id": "ownprogram", "label": { "en": "Auto", "nl": "Auto" } }
+      ]
+    }
+  ]
+}

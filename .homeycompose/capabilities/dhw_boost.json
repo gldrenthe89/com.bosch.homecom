@@ -1,0 +1,15 @@
+{
+  "type": "boolean",
+  "title": {
+    "en": "Hot Water Boost",
+    "nl": "Warm Water Boost"
+  },
+  "desc": {
+    "en": "Extra hot water boost",
+    "nl": "Extra warm water boost"
+  },
+  "getable": true,
+  "setable": true,
+  "uiComponent": "toggle",
+  "insights": false
+}

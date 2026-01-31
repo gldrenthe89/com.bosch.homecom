@@ -1,0 +1,36 @@
+{
+  "title": {
+    "en": "Hot water mode is...",
+    "nl": "Warm water modus is..."
+  },
+  "titleFormatted": {
+    "en": "Hot water mode is [[dhw_mode]]",
+    "nl": "Warm water modus is [[dhw_mode]]"
+  },
+  "hint": {
+    "en": "Check if the hot water mode matches",
+    "nl": "Controleer of de warm water modus overeenkomt"
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=k30-k40"
+    },
+    {
+      "type": "dropdown",
+      "name": "dhw_mode",
+      "title": {
+        "en": "Mode",
+        "nl": "Modus"
+      },
+      "values": [
+        { "id": "Off", "label": { "en": "Off", "nl": "Uit" } },
+        { "id": "eco", "label": { "en": "Eco+", "nl": "Eco+" } },
+        { "id": "low", "label": { "en": "Eco", "nl": "Eco" } },
+        { "id": "high", "label": { "en": "Comfort", "nl": "Comfort" } },
+        { "id": "ownprogram", "label": { "en": "Auto", "nl": "Auto" } }
+      ]
+    }
+  ]
+}

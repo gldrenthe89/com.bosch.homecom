@@ -1,0 +1,47 @@
+{
+  "type": "enum",
+  "title": {
+    "en": "Hot Water Mode",
+    "nl": "Warm Water Modus"
+  },
+  "getable": true,
+  "setable": true,
+  "uiComponent": "picker",
+  "values": [
+    {
+      "id": "Off",
+      "title": {
+        "en": "Off",
+        "nl": "Uit"
+      }
+    },
+    {
+      "id": "eco",
+      "title": {
+        "en": "Eco+",
+        "nl": "Eco+"
+      }
+    },
+    {
+      "id": "low",
+      "title": {
+        "en": "Eco",
+        "nl": "Eco"
+      }
+    },
+    {
+      "id": "high",
+      "title": {
+        "en": "Comfort",
+        "nl": "Comfort"
+      }
+    },
+    {
+      "id": "ownprogram",
+      "title": {
+        "en": "Auto",
+        "nl": "Auto"
+      }
+    }
+  ]
+}

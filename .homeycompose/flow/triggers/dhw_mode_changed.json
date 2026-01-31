@@ -1,0 +1,28 @@
+{
+  "title": {
+    "en": "The hot water mode changed",
+    "nl": "De warm water modus is veranderd"
+  },
+  "hint": {
+    "en": "Triggers when the hot water mode changes",
+    "nl": "Triggert wanneer de warm water modus verandert"
+  },
+  "tokens": [
+    {
+      "name": "mode",
+      "type": "string",
+      "title": {
+        "en": "Mode",
+        "nl": "Modus"
+      },
+      "example": "eco"
+    }
+  ],
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=k30-k40"
+    }
+  ]
+}

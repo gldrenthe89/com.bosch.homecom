@@ -1,0 +1,28 @@
+{
+  "title": {
+    "en": "The room temperature changed",
+    "nl": "De kamertemperatuur is veranderd"
+  },
+  "hint": {
+    "en": "Triggers when the room temperature changes",
+    "nl": "Triggert wanneer de kamertemperatuur verandert"
+  },
+  "tokens": [
+    {
+      "name": "temperature",
+      "type": "number",
+      "title": {
+        "en": "Temperature",
+        "nl": "Temperatuur"
+      },
+      "example": 21.5
+    }
+  ],
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=k30-k40"
+    }
+  ]
+}

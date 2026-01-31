@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Boiler body -->
+  <rect x="20" y="15" width="60" height="70" rx="5" ry="5"/>
+
+  <!-- Display panel -->
+  <rect x="30" y="25" width="40" height="20" rx="2" ry="2"/>
+
+  <!-- Temperature indicator lines -->
+  <line x1="35" y1="32" x2="45" y2="32"/>
+  <line x1="35" y1="38" x2="50" y2="38"/>
+
+  <!-- Control buttons -->
+  <circle cx="60" cy="32" r="3"/>
+  <circle cx="60" cy="40" r="3"/>
+
+  <!-- Heat waves -->
+  <path d="M35 55 Q38 52 35 49 Q32 46 35 43"/>
+  <path d="M50 55 Q53 52 50 49 Q47 46 50 43"/>
+  <path d="M65 55 Q68 52 65 49 Q62 46 65 43"/>
+
+  <!-- Bottom connections (pipes) -->
+  <line x1="35" y1="85" x2="35" y2="95"/>
+  <line x1="65" y1="85" x2="65" y2="95"/>
+
+  <!-- Pipe connectors -->
+  <circle cx="35" cy="95" r="4"/>
+  <circle cx="65" cy="95" r="4"/>
+</svg>

@@ -1,0 +1,17 @@
+{
+  "type": "number",
+  "title": {
+    "en": "System Pressure",
+    "nl": "Systeemdruk"
+  },
+  "units": "bar",
+  "getable": true,
+  "setable": false,
+  "uiComponent": "sensor",
+  "icon": "/assets/icons/pressure.svg",
+  "insights": true,
+  "decimals": 1,
+  "min": 0,
+  "max": 5,
+  "step": 0.1
+}

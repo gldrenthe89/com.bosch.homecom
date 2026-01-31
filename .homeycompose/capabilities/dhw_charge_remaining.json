@@ -1,0 +1,15 @@
+{
+  "type": "number",
+  "title": {
+    "en": "Boost Time Remaining",
+    "nl": "Resterende Boost Tijd"
+  },
+  "units": "min",
+  "getable": true,
+  "setable": false,
+  "uiComponent": "sensor",
+  "icon": "/assets/icons/timer.svg",
+  "insights": false,
+  "decimals": 0,
+  "min": 0
+}

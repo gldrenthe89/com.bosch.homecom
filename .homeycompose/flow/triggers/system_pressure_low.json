@@ -1,0 +1,28 @@
+{
+  "title": {
+    "en": "System pressure is too low",
+    "nl": "Systeemdruk is te laag"
+  },
+  "hint": {
+    "en": "Triggers when the system pressure drops below 1.0 bar",
+    "nl": "Triggert wanneer de systeemdruk onder 1.0 bar daalt"
+  },
+  "tokens": [
+    {
+      "name": "pressure",
+      "type": "number",
+      "title": {
+        "en": "Pressure",
+        "nl": "Druk"
+      },
+      "example": 0.8
+    }
+  ],
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=k30-k40"
+    }
+  ]
+}

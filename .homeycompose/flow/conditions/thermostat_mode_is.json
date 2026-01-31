@@ -1,0 +1,34 @@
+{
+  "title": {
+    "en": "Thermostat mode is...",
+    "nl": "Thermostaat modus is..."
+  },
+  "titleFormatted": {
+    "en": "Thermostat mode is [[mode]]",
+    "nl": "Thermostaat modus is [[mode]]"
+  },
+  "hint": {
+    "en": "Check if the thermostat mode matches",
+    "nl": "Controleer of de thermostaat modus overeenkomt"
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=k30-k40"
+    },
+    {
+      "type": "dropdown",
+      "name": "mode",
+      "title": {
+        "en": "Mode",
+        "nl": "Modus"
+      },
+      "values": [
+        { "id": "off", "label": { "en": "Off", "nl": "Uit" } },
+        { "id": "heat", "label": { "en": "Heat", "nl": "Verwarmen" } },
+        { "id": "auto", "label": { "en": "Auto", "nl": "Automatisch" } }
+      ]
+    }
+  ]
+}

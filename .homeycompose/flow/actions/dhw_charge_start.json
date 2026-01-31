@@ -1,0 +1,36 @@
+{
+  "title": {
+    "en": "Start hot water boost",
+    "nl": "Start warm water boost"
+  },
+  "titleFormatted": {
+    "en": "Start hot water boost for [[duration]] minutes",
+    "nl": "Start warm water boost voor [[duration]] minuten"
+  },
+  "hint": {
+    "en": "Start the hot water boost to quickly heat up the water tank",
+    "nl": "Start de warm water boost om de boiler snel op te warmen"
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=k30-k40"
+    },
+    {
+      "type": "number",
+      "name": "duration",
+      "title": {
+        "en": "Duration (minutes)",
+        "nl": "Duur (minuten)"
+      },
+      "min": 15,
+      "max": 480,
+      "step": 15,
+      "placeholder": {
+        "en": "120",
+        "nl": "120"
+      }
+    }
+  ]
+}

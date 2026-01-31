@@ -1,0 +1,36 @@
+{
+  "title": {
+    "en": "Room temperature is !{{above|below}} ...",
+    "nl": "Kamertemperatuur is !{{hoger|lager}} dan ..."
+  },
+  "titleFormatted": {
+    "en": "Room temperature is !{{above|below}} [[temperature]]°C",
+    "nl": "Kamertemperatuur is !{{hoger|lager}} dan [[temperature]]°C"
+  },
+  "hint": {
+    "en": "Check if the room temperature is above or below a value",
+    "nl": "Controleer of de kamertemperatuur hoger of lager is dan een waarde"
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=k30-k40"
+    },
+    {
+      "type": "number",
+      "name": "temperature",
+      "title": {
+        "en": "Temperature",
+        "nl": "Temperatuur"
+      },
+      "min": -20,
+      "max": 50,
+      "step": 0.5,
+      "placeholder": {
+        "en": "20",
+        "nl": "20"
+      }
+    }
+  ]
+}

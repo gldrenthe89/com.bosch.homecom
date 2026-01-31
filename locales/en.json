@@ -1,0 +1,31 @@
+{
+  "settings": {
+    "poll_interval": {
+      "title": "Polling Interval",
+      "hint": "How often to check for device updates (in seconds)"
+    }
+  },
+  "pair": {
+    "login": {
+      "title": "Login to Bosch HomeCom",
+      "step1": "Click the button below to open the Bosch login page:",
+      "step2": "Login with your Bosch HomeCom Easy account",
+      "step3": "After login, you will see a page that cannot load. Copy the authorization code from the URL:",
+      "step4": "Paste the code below:",
+      "urlExample": "The URL will look like:",
+      "copyCode": "Copy the code after \"code=\" (ends with -1)",
+      "openButton": "Open Bosch Login",
+      "submit": "Continue"
+    },
+    "list_devices": {
+      "title": "Select Devices",
+      "loading": "Loading devices...",
+      "no_devices": "No devices found"
+    }
+  },
+  "errors": {
+    "not_available": "Device is not available",
+    "auth_failed": "Authentication failed",
+    "api_error": "API error occurred"
+  }
+}

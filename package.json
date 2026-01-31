@@ -1,0 +1,19 @@
+{
+  "name": "com.bosch.homecom",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "lint": "eslint . --ext .ts",
+    "test": "echo \"No tests configured\" && exit 0"
+  },
+  "dependencies": {
+    "homey-oauth2app": "^3.2.1"
+  },
+  "devDependencies": {
+    "@types/homey": "npm:homey-apps-sdk-v3-types@^0.3.8",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.3.0"
+  }
+}

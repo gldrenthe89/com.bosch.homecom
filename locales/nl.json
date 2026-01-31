@@ -1,0 +1,31 @@
+{
+  "settings": {
+    "poll_interval": {
+      "title": "Polling Interval",
+      "hint": "Hoe vaak de apparaatstatus gecontroleerd wordt (in seconden)"
+    }
+  },
+  "pair": {
+    "login": {
+      "title": "Inloggen bij Bosch HomeCom",
+      "step1": "Klik op de knop hieronder om de Bosch login pagina te openen:",
+      "step2": "Log in met je Bosch HomeCom Easy account",
+      "step3": "Na het inloggen zie je een pagina die niet kan laden. Kopieer de autorisatiecode uit de URL:",
+      "step4": "Plak de code hieronder:",
+      "urlExample": "De URL ziet er zo uit:",
+      "copyCode": "Kopieer de code na \"code=\" (eindigt op -1)",
+      "openButton": "Open Bosch Login",
+      "submit": "Doorgaan"
+    },
+    "list_devices": {
+      "title": "Selecteer Apparaten",
+      "loading": "Apparaten laden...",
+      "no_devices": "Geen apparaten gevonden"
+    }
+  },
+  "errors": {
+    "not_available": "Apparaat is niet beschikbaar",
+    "auth_failed": "Authenticatie mislukt",
+    "api_error": "API fout opgetreden"
+  }
+}

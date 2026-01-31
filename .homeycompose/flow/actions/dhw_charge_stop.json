@@ -1,0 +1,21 @@
+{
+  "title": {
+    "en": "Stop hot water boost",
+    "nl": "Stop warm water boost"
+  },
+  "titleFormatted": {
+    "en": "Stop hot water boost",
+    "nl": "Stop warm water boost"
+  },
+  "hint": {
+    "en": "Stop the active hot water boost",
+    "nl": "Stop de actieve warm water boost"
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=k30-k40"
+    }
+  ]
+}

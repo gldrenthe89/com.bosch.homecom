@@ -1,0 +1,36 @@
+{
+  "title": {
+    "en": "Modulation is !{{above|below}} ...",
+    "nl": "Modulatie is !{{hoger|lager}} dan ..."
+  },
+  "titleFormatted": {
+    "en": "Modulation is !{{above|below}} [[modulation]]%",
+    "nl": "Modulatie is !{{hoger|lager}} dan [[modulation]]%"
+  },
+  "hint": {
+    "en": "Check if the modulation is above or below a value",
+    "nl": "Controleer of de modulatie hoger of lager is dan een waarde"
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=k30-k40"
+    },
+    {
+      "type": "number",
+      "name": "modulation",
+      "title": {
+        "en": "Modulation",
+        "nl": "Modulatie"
+      },
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "placeholder": {
+        "en": "50",
+        "nl": "50"
+      }
+    }
+  ]
+}

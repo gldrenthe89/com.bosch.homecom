@@ -1,0 +1,34 @@
+{
+  "title": {
+    "en": "Heating/cooling mode is...",
+    "nl": "Verwarmen/koelen modus is..."
+  },
+  "titleFormatted": {
+    "en": "Heating/cooling mode is [[mode]]",
+    "nl": "Verwarmen/koelen modus is [[mode]]"
+  },
+  "hint": {
+    "en": "Check if the heating/cooling mode matches",
+    "nl": "Controleer of de verwarmen/koelen modus overeenkomt"
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=k30-k40"
+    },
+    {
+      "type": "dropdown",
+      "name": "mode",
+      "title": {
+        "en": "Mode",
+        "nl": "Modus"
+      },
+      "values": [
+        { "id": "heat", "label": { "en": "Heating", "nl": "Verwarmen" } },
+        { "id": "cool", "label": { "en": "Cooling", "nl": "Koelen" } },
+        { "id": "off", "label": { "en": "Off", "nl": "Uit" } }
+      ]
+    }
+  ]
+}

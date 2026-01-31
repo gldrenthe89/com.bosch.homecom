@@ -1,0 +1,17 @@
+{
+  "title": {
+    "en": "Heat demand is !{{active|inactive}}",
+    "nl": "Warmtevraag is !{{actief|inactief}}"
+  },
+  "hint": {
+    "en": "Check if the heat pump has an active heat demand",
+    "nl": "Controleer of de warmtepomp een actieve warmtevraag heeft"
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=k30-k40"
+    }
+  ]
+}

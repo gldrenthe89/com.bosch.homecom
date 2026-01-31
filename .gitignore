@@ -1,0 +1,37 @@
+# Dependencies
+node_modules/
+
+# Build output
+*.js
+*.js.map
+*.d.ts
+!*.config.js
+
+# Homey compose output
+.homeycompose/.resolved/
+app.json
+
+# Environment
+.env
+.env.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Testing
+coverage/
+
+
+# Added by Homey CLI
+/.homeybuild/

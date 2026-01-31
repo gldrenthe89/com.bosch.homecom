@@ -1,0 +1,36 @@
+{
+  "title": {
+    "en": "Hot water temperature is !{{above|below}} ...",
+    "nl": "Warm water temperatuur is !{{hoger|lager}} dan ..."
+  },
+  "titleFormatted": {
+    "en": "Hot water temperature is !{{above|below}} [[temperature]]°C",
+    "nl": "Warm water temperatuur is !{{hoger|lager}} dan [[temperature]]°C"
+  },
+  "hint": {
+    "en": "Check if the hot water temperature is above or below a value",
+    "nl": "Controleer of de warm water temperatuur hoger of lager is dan een waarde"
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=k30-k40"
+    },
+    {
+      "type": "number",
+      "name": "temperature",
+      "title": {
+        "en": "Temperature",
+        "nl": "Temperatuur"
+      },
+      "min": 10,
+      "max": 65,
+      "step": 0.5,
+      "placeholder": {
+        "en": "45",
+        "nl": "45"
+      }
+    }
+  ]
+}

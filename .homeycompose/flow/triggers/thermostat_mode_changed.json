@@ -1,0 +1,28 @@
+{
+  "title": {
+    "en": "The thermostat mode changed",
+    "nl": "De thermostaat modus is veranderd"
+  },
+  "hint": {
+    "en": "Triggers when the thermostat mode changes",
+    "nl": "Triggert wanneer de thermostaat modus verandert"
+  },
+  "tokens": [
+    {
+      "name": "mode",
+      "type": "string",
+      "title": {
+        "en": "Mode",
+        "nl": "Modus"
+      },
+      "example": "heat"
+    }
+  ],
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=k30-k40"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "title": {
+    "en": "Hot water boost stopped",
+    "nl": "Warm water boost is gestopt"
+  },
+  "hint": {
+    "en": "Triggers when the hot water boost is deactivated",
+    "nl": "Triggert wanneer de warm water boost wordt gedeactiveerd"
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=k30-k40"
+    }
+  ]
+}

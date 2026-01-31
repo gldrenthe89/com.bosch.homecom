@@ -1,0 +1,17 @@
+{
+  "title": {
+    "en": "Heat demand stopped",
+    "nl": "Warmtevraag is gestopt"
+  },
+  "hint": {
+    "en": "Triggers when the heat pump stops heating",
+    "nl": "Triggert wanneer de warmtepomp stopt met verwarmen"
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=k30-k40"
+    }
+  ]
+}

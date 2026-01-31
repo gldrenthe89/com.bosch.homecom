@@ -1,0 +1,119 @@
+{
+  "name": {
+    "en": "Boiler / Heat Pump (K30/K40)",
+    "nl": "Boiler / Warmtepomp (K30/K40)"
+  },
+  "class": "thermostat",
+  "capabilities": [
+    "thermostat_mode",
+    "target_temperature",
+    "measure_temperature",
+    "measure_temperature.outdoor",
+    "measure_temperature.supply",
+    "measure_temperature.return",
+    "heat_cool_mode",
+    "modulation",
+    "system_pressure",
+    "heat_demand",
+    "working_hours",
+    "dhw_operation_mode",
+    "target_temperature.dhw",
+    "measure_temperature.dhw",
+    "dhw_boost",
+    "dhw_charge_remaining"
+  ],
+  "capabilitiesOptions": {
+    "thermostat_mode": {
+      "values": [
+        {
+          "id": "off",
+          "title": {
+            "en": "Off",
+            "nl": "Uit"
+          }
+        },
+        {
+          "id": "heat",
+          "title": {
+            "en": "Heat",
+            "nl": "Verwarmen"
+          }
+        },
+        {
+          "id": "auto",
+          "title": {
+            "en": "Auto",
+            "nl": "Automatisch"
+          }
+        }
+      ]
+    },
+    "target_temperature": {
+      "min": 5,
+      "max": 30,
+      "step": 0.5,
+      "title": {
+        "en": "Room Temperature",
+        "nl": "Kamertemperatuur"
+      }
+    },
+    "target_temperature.dhw": {
+      "min": 30,
+      "max": 65,
+      "step": 1,
+      "title": {
+        "en": "Hot Water Temperature",
+        "nl": "Warm Water Temperatuur"
+      }
+    },
+    "measure_temperature.dhw": {
+      "title": {
+        "en": "Hot Water Temperature",
+        "nl": "Warm Water Temperatuur"
+      }
+    },
+    "measure_temperature.outdoor": {
+      "title": {
+        "en": "Outdoor Temperature",
+        "nl": "Buitentemperatuur"
+      }
+    },
+    "measure_temperature.supply": {
+      "title": {
+        "en": "Supply Temperature",
+        "nl": "Aanvoertemperatuur"
+      },
+      "icon": "/assets/icons/temp-supply.svg"
+    },
+    "measure_temperature.return": {
+      "title": {
+        "en": "Return Temperature",
+        "nl": "Retourtemperatuur"
+      },
+      "icon": "/assets/icons/temp-return.svg"
+    }
+  },
+  "platforms": ["local"],
+  "connectivity": ["cloud"],
+  "images": {
+    "small": "/drivers/k30-k40/assets/images/small.png",
+    "large": "/drivers/k30-k40/assets/images/large.png",
+    "xlarge": "/drivers/k30-k40/assets/images/xlarge.png"
+  },
+  "pair": [
+    {
+      "id": "login"
+    },
+    {
+      "id": "list_devices",
+      "template": "list_devices",
+      "navigation": {
+        "next": "add_devices"
+      }
+    },
+    {
+      "id": "add_devices",
+      "template": "add_devices"
+    }
+  ]
+}

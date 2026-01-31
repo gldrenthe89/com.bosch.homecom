@@ -1,0 +1,17 @@
+{
+  "title": {
+    "en": "Heat demand started",
+    "nl": "Warmtevraag is gestart"
+  },
+  "hint": {
+    "en": "Triggers when the heat pump starts heating",
+    "nl": "Triggert wanneer de warmtepomp begint met verwarmen"
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=k30-k40"
+    }
+  ]
+}

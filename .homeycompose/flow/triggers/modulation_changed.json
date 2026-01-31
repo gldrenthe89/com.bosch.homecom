@@ -1,0 +1,28 @@
+{
+  "title": {
+    "en": "The modulation changed",
+    "nl": "De modulatie is veranderd"
+  },
+  "hint": {
+    "en": "Triggers when the heat pump modulation changes",
+    "nl": "Triggert wanneer de warmtepomp modulatie verandert"
+  },
+  "tokens": [
+    {
+      "name": "modulation",
+      "type": "number",
+      "title": {
+        "en": "Modulation",
+        "nl": "Modulatie"
+      },
+      "example": 75
+    }
+  ],
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=k30-k40"
+    }
+  ]
+}

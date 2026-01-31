@@ -1,0 +1,28 @@
+{
+  "title": {
+    "en": "The hot water temperature changed",
+    "nl": "De warm water temperatuur is veranderd"
+  },
+  "hint": {
+    "en": "Triggers when the hot water temperature changes",
+    "nl": "Triggert wanneer de warm water temperatuur verandert"
+  },
+  "tokens": [
+    {
+      "name": "temperature",
+      "type": "number",
+      "title": {
+        "en": "Temperature",
+        "nl": "Temperatuur"
+      },
+      "example": 48.5
+    }
+  ],
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=k30-k40"
+    }
+  ]
+}

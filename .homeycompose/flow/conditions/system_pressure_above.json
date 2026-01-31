@@ -1,0 +1,36 @@
+{
+  "title": {
+    "en": "System pressure is !{{above|below}} ...",
+    "nl": "Systeemdruk is !{{hoger|lager}} dan ..."
+  },
+  "titleFormatted": {
+    "en": "System pressure is !{{above|below}} [[pressure]] bar",
+    "nl": "Systeemdruk is !{{hoger|lager}} dan [[pressure]] bar"
+  },
+  "hint": {
+    "en": "Check if the system pressure is above or below a value",
+    "nl": "Controleer of de systeemdruk hoger of lager is dan een waarde"
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=k30-k40"
+    },
+    {
+      "type": "number",
+      "name": "pressure",
+      "title": {
+        "en": "Pressure",
+        "nl": "Druk"
+      },
+      "min": 0,
+      "max": 4,
+      "step": 0.1,
+      "placeholder": {
+        "en": "1.5",
+        "nl": "1.5"
+      }
+    }
+  ]
+}

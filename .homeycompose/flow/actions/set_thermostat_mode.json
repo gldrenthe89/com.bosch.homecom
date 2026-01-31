@@ -1,0 +1,34 @@
+{
+  "title": {
+    "en": "Set thermostat mode",
+    "nl": "Stel thermostaat modus in"
+  },
+  "titleFormatted": {
+    "en": "Set thermostat mode to [[mode]]",
+    "nl": "Stel thermostaat modus in op [[mode]]"
+  },
+  "hint": {
+    "en": "Set the thermostat operation mode",
+    "nl": "Stel de thermostaat modus in"
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=k30-k40"
+    },
+    {
+      "type": "dropdown",
+      "name": "mode",
+      "title": {
+        "en": "Mode",
+        "nl": "Modus"
+      },
+      "values": [
+        { "id": "off", "label": { "en": "Off", "nl": "Uit" } },
+        { "id": "heat", "label": { "en": "Heat", "nl": "Verwarmen" } },
+        { "id": "auto", "label": { "en": "Auto", "nl": "Automatisch" } }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "type": "number",
+  "title": {
+    "en": "Operating Hours",
+    "nl": "Bedrijfsuren"
+  },
+  "units": "h",
+  "getable": true,
+  "setable": false,
+  "uiComponent": "sensor",
+  "icon": "/assets/icons/clock.svg",
+  "insights": false,
+  "decimals": 0
+}

@@ -1,0 +1,34 @@
+{
+  "type": "enum",
+  "title": {
+    "en": "Heat/Cool Mode",
+    "nl": "Verwarmen/Koelen"
+  },
+  "getable": true,
+  "setable": false,
+  "uiComponent": "sensor",
+  "icon": "/assets/icons/heat-cool.svg",
+  "values": [
+    {
+      "id": "heat",
+      "title": {
+        "en": "Heating",
+        "nl": "Verwarmen"
+      }
+    },
+    {
+      "id": "cool",
+      "title": {
+        "en": "Cooling",
+        "nl": "Koelen"
+      }
+    },
+    {
+      "id": "off",
+      "title": {
+        "en": "Off",
+        "nl": "Uit"
+      }
+    }
+  ]
+}

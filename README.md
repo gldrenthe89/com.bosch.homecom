@@ -80,15 +80,54 @@ the Bosch HomeCom Easy cloud service.
 
 ### Flow Cards
 
-**Actions:**
+#### Triggers (WHEN)
 
+**Temperature triggers:**
+- Room temperature changed
+- Outdoor temperature changed
+- Hot water temperature changed
+- Supply temperature changed
+- Return temperature changed
+
+**Status triggers:**
+- Heat demand started
+- Heat demand stopped
+- Hot water boost started
+- Hot water boost stopped
+- Thermostat mode changed
+- Heating/cooling mode changed
+- Hot water mode changed
+
+**System triggers:**
+- Modulation changed
+- System pressure changed
+- System pressure is too low (< 1.0 bar)
+
+#### Conditions (AND)
+
+**Temperature conditions:**
+- Room temperature is above/below X°C
+- Outdoor temperature is above/below X°C
+- Hot water temperature is above/below X°C
+
+**Status conditions:**
+- Heat demand is active/inactive
+- Hot water boost is active/inactive
+- Thermostat mode is... (off/heat/auto)
+- Heating/cooling mode is... (heat/cool/off)
+- Hot water mode is... (off/eco+/eco/comfort/auto)
+
+**System conditions:**
+- Modulation is above/below X%
+- System pressure is above/below X bar
+
+#### Actions (THEN)
+
+- Set thermostat mode (off/heat/auto)
+- Set room temperature
+- Set hot water mode
 - Start hot water boost (with duration)
 - Stop hot water boost
-- Set hot water mode
-
-**Conditions:**
-
-- Hot water mode is...
 
 ## Development
 
