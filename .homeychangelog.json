@@ -10,5 +10,8 @@
   },
   "1.0.3": {
     "en": "fix double trigger on flow cards"
+  },
+  "1.1.0": {
+    "en": "moved auth status to settings and added repair device option"
   }
 }
