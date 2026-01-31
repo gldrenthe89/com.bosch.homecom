@@ -7,5 +7,8 @@
   },
   "1.0.2": {
     "en": "Implement poll lock to prevent concurrent `syncDeviceState` calls for Bosch K30/K40 devices"
+  },
+  "1.0.3": {
+    "en": "fix double trigger on flow cards"
   }
 }
