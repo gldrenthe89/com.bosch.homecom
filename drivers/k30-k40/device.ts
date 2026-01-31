@@ -32,6 +32,7 @@ class K30K40Device extends OAuth2Device<BoschHomeComOAuth2Client> {
   public gatewayId!: string;
   private pollInterval: NodeJS.Timeout | null = null;
   private previousSystemPressure: number | null = null;
+  private isSyncing: boolean = false;
 
   async onOAuth2Init(): Promise<void> {
     this.api = new HomeComApi(this.oAuth2Client);
@@ -127,6 +128,11 @@ class K30K40Device extends OAuth2Device<BoschHomeComOAuth2Client> {
   }
 
   private async syncDeviceState(): Promise<void> {
+    if (this.isSyncing) {
+      return;
+    }
+
+    this.isSyncing = true;
     try {
       const data = await this.api.getK40Data(this.gatewayId);
       const driver = this.driver as unknown as K30K40Driver;
@@ -296,6 +302,8 @@ class K30K40Device extends OAuth2Device<BoschHomeComOAuth2Client> {
     } catch (error) {
       this.error('Failed to sync device state:', error);
       await this.setUnavailable('Unable to communicate with device');
+    } finally {
+      this.isSyncing = false;
     }
   }
 
