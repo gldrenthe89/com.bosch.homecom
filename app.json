@@ -1,0 +1,1360 @@
+{
+  "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
+  "id": "com.bosch.homecom",
+  "version": "1.0.2",
+  "compatibility": ">=5.0.0",
+  "sdk": 3,
+  "platforms": [
+    "local"
+  ],
+  "name": {
+    "en": "Bosch HomeCom Easy",
+    "nl": "Bosch HomeCom Easy"
+  },
+  "description": {
+    "en": "Control your Bosch heating and cooling devices",
+    "nl": "Bedien je Bosch verwarmings- en koelingsapparaten"
+  },
+  "brandColor": "#EA0016",
+  "category": [
+    "climate"
+  ],
+  "tags": {
+    "en": [
+      "bosch",
+      "homecom",
+      "thermostat",
+      "heating",
+      "air conditioning",
+      "heat pump",
+      "climate"
+    ],
+    "nl": [
+      "bosch",
+      "homecom",
+      "thermostaat",
+      "verwarming",
+      "airconditioning",
+      "warmtepomp",
+      "klimaat"
+    ]
+  },
+  "permissions": [],
+  "images": {
+    "small": "/assets/images/small.png",
+    "large": "/assets/images/large.png",
+    "xlarge": "/assets/images/xlarge.png"
+  },
+  "author": {
+    "name": "Geert Lucas Drenthe",
+    "email": "developer@example.com"
+  },
+  "support": "mailto:developer@example.com",
+  "flow": {
+    "triggers": [
+      {
+        "title": {
+          "en": "Hot water boost stopped",
+          "nl": "Warm water boost is gestopt"
+        },
+        "hint": {
+          "en": "Triggers when the hot water boost is deactivated",
+          "nl": "Triggert wanneer de warm water boost wordt gedeactiveerd"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=k30-k40"
+          }
+        ],
+        "id": "dhw_boost_false"
+      },
+      {
+        "title": {
+          "en": "Hot water boost started",
+          "nl": "Warm water boost is gestart"
+        },
+        "hint": {
+          "en": "Triggers when the hot water boost is activated",
+          "nl": "Triggert wanneer de warm water boost wordt geactiveerd"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=k30-k40"
+          }
+        ],
+        "id": "dhw_boost_true"
+      },
+      {
+        "title": {
+          "en": "The hot water mode changed",
+          "nl": "De warm water modus is veranderd"
+        },
+        "hint": {
+          "en": "Triggers when the hot water mode changes",
+          "nl": "Triggert wanneer de warm water modus verandert"
+        },
+        "tokens": [
+          {
+            "name": "mode",
+            "type": "string",
+            "title": {
+              "en": "Mode",
+              "nl": "Modus"
+            },
+            "example": "eco"
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=k30-k40"
+          }
+        ],
+        "id": "dhw_mode_changed"
+      },
+      {
+        "title": {
+          "en": "The hot water temperature changed",
+          "nl": "De warm water temperatuur is veranderd"
+        },
+        "hint": {
+          "en": "Triggers when the hot water temperature changes",
+          "nl": "Triggert wanneer de warm water temperatuur verandert"
+        },
+        "tokens": [
+          {
+            "name": "temperature",
+            "type": "number",
+            "title": {
+              "en": "Temperature",
+              "nl": "Temperatuur"
+            },
+            "example": 48.5
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=k30-k40"
+          }
+        ],
+        "id": "dhw_temperature_changed"
+      },
+      {
+        "title": {
+          "en": "The heating/cooling mode changed",
+          "nl": "De verwarmen/koelen modus is veranderd"
+        },
+        "hint": {
+          "en": "Triggers when the heating/cooling mode changes",
+          "nl": "Triggert wanneer de verwarmen/koelen modus verandert"
+        },
+        "tokens": [
+          {
+            "name": "mode",
+            "type": "string",
+            "title": {
+              "en": "Mode",
+              "nl": "Modus"
+            },
+            "example": "heat"
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=k30-k40"
+          }
+        ],
+        "id": "heat_cool_mode_changed"
+      },
+      {
+        "title": {
+          "en": "Heat demand stopped",
+          "nl": "Warmtevraag is gestopt"
+        },
+        "hint": {
+          "en": "Triggers when the heat pump stops heating",
+          "nl": "Triggert wanneer de warmtepomp stopt met verwarmen"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=k30-k40"
+          }
+        ],
+        "id": "heat_demand_false"
+      },
+      {
+        "title": {
+          "en": "Heat demand started",
+          "nl": "Warmtevraag is gestart"
+        },
+        "hint": {
+          "en": "Triggers when the heat pump starts heating",
+          "nl": "Triggert wanneer de warmtepomp begint met verwarmen"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=k30-k40"
+          }
+        ],
+        "id": "heat_demand_true"
+      },
+      {
+        "title": {
+          "en": "The modulation changed",
+          "nl": "De modulatie is veranderd"
+        },
+        "hint": {
+          "en": "Triggers when the heat pump modulation changes",
+          "nl": "Triggert wanneer de warmtepomp modulatie verandert"
+        },
+        "tokens": [
+          {
+            "name": "modulation",
+            "type": "number",
+            "title": {
+              "en": "Modulation",
+              "nl": "Modulatie"
+            },
+            "example": 75
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=k30-k40"
+          }
+        ],
+        "id": "modulation_changed"
+      },
+      {
+        "title": {
+          "en": "The outdoor temperature changed",
+          "nl": "De buitentemperatuur is veranderd"
+        },
+        "hint": {
+          "en": "Triggers when the outdoor temperature changes",
+          "nl": "Triggert wanneer de buitentemperatuur verandert"
+        },
+        "tokens": [
+          {
+            "name": "temperature",
+            "type": "number",
+            "title": {
+              "en": "Temperature",
+              "nl": "Temperatuur"
+            },
+            "example": 5
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=k30-k40"
+          }
+        ],
+        "id": "outdoor_temperature_changed"
+      },
+      {
+        "title": {
+          "en": "The return temperature changed",
+          "nl": "De retourtemperatuur is veranderd"
+        },
+        "hint": {
+          "en": "Triggers when the return temperature changes",
+          "nl": "Triggert wanneer de retourtemperatuur verandert"
+        },
+        "tokens": [
+          {
+            "name": "temperature",
+            "type": "number",
+            "title": {
+              "en": "Temperature",
+              "nl": "Temperatuur"
+            },
+            "example": 28
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=k30-k40"
+          }
+        ],
+        "id": "return_temperature_changed"
+      },
+      {
+        "title": {
+          "en": "The supply temperature changed",
+          "nl": "De aanvoertemperatuur is veranderd"
+        },
+        "hint": {
+          "en": "Triggers when the supply temperature changes",
+          "nl": "Triggert wanneer de aanvoertemperatuur verandert"
+        },
+        "tokens": [
+          {
+            "name": "temperature",
+            "type": "number",
+            "title": {
+              "en": "Temperature",
+              "nl": "Temperatuur"
+            },
+            "example": 35
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=k30-k40"
+          }
+        ],
+        "id": "supply_temperature_changed"
+      },
+      {
+        "title": {
+          "en": "The system pressure changed",
+          "nl": "De systeemdruk is veranderd"
+        },
+        "hint": {
+          "en": "Triggers when the system pressure changes",
+          "nl": "Triggert wanneer de systeemdruk verandert"
+        },
+        "tokens": [
+          {
+            "name": "pressure",
+            "type": "number",
+            "title": {
+              "en": "Pressure",
+              "nl": "Druk"
+            },
+            "example": 1.5
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=k30-k40"
+          }
+        ],
+        "id": "system_pressure_changed"
+      },
+      {
+        "title": {
+          "en": "System pressure is too low",
+          "nl": "Systeemdruk is te laag"
+        },
+        "hint": {
+          "en": "Triggers when the system pressure drops below 1.0 bar",
+          "nl": "Triggert wanneer de systeemdruk onder 1.0 bar daalt"
+        },
+        "tokens": [
+          {
+            "name": "pressure",
+            "type": "number",
+            "title": {
+              "en": "Pressure",
+              "nl": "Druk"
+            },
+            "example": 0.8
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=k30-k40"
+          }
+        ],
+        "id": "system_pressure_low"
+      },
+      {
+        "title": {
+          "en": "The room temperature changed",
+          "nl": "De kamertemperatuur is veranderd"
+        },
+        "hint": {
+          "en": "Triggers when the room temperature changes",
+          "nl": "Triggert wanneer de kamertemperatuur verandert"
+        },
+        "tokens": [
+          {
+            "name": "temperature",
+            "type": "number",
+            "title": {
+              "en": "Temperature",
+              "nl": "Temperatuur"
+            },
+            "example": 21.5
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=k30-k40"
+          }
+        ],
+        "id": "temperature_changed"
+      },
+      {
+        "title": {
+          "en": "The thermostat mode changed",
+          "nl": "De thermostaat modus is veranderd"
+        },
+        "hint": {
+          "en": "Triggers when the thermostat mode changes",
+          "nl": "Triggert wanneer de thermostaat modus verandert"
+        },
+        "tokens": [
+          {
+            "name": "mode",
+            "type": "string",
+            "title": {
+              "en": "Mode",
+              "nl": "Modus"
+            },
+            "example": "heat"
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=k30-k40"
+          }
+        ],
+        "id": "thermostat_mode_changed"
+      }
+    ],
+    "conditions": [
+      {
+        "title": {
+          "en": "Hot water boost is !{{active|inactive}}",
+          "nl": "Warm water boost is !{{actief|inactief}}"
+        },
+        "hint": {
+          "en": "Check if the hot water boost is active",
+          "nl": "Controleer of de warm water boost actief is"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=k30-k40"
+          }
+        ],
+        "id": "dhw_boost_is"
+      },
+      {
+        "title": {
+          "en": "Hot water mode is...",
+          "nl": "Warm water modus is..."
+        },
+        "titleFormatted": {
+          "en": "Hot water mode is [[dhw_mode]]",
+          "nl": "Warm water modus is [[dhw_mode]]"
+        },
+        "hint": {
+          "en": "Check if the hot water mode matches",
+          "nl": "Controleer of de warm water modus overeenkomt"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=k30-k40"
+          },
+          {
+            "type": "dropdown",
+            "name": "dhw_mode",
+            "title": {
+              "en": "Mode",
+              "nl": "Modus"
+            },
+            "values": [
+              {
+                "id": "Off",
+                "label": {
+                  "en": "Off",
+                  "nl": "Uit"
+                }
+              },
+              {
+                "id": "eco",
+                "label": {
+                  "en": "Eco+",
+                  "nl": "Eco+"
+                }
+              },
+              {
+                "id": "low",
+                "label": {
+                  "en": "Eco",
+                  "nl": "Eco"
+                }
+              },
+              {
+                "id": "high",
+                "label": {
+                  "en": "Comfort",
+                  "nl": "Comfort"
+                }
+              },
+              {
+                "id": "ownprogram",
+                "label": {
+                  "en": "Auto",
+                  "nl": "Auto"
+                }
+              }
+            ]
+          }
+        ],
+        "id": "dhw_mode_is"
+      },
+      {
+        "title": {
+          "en": "Hot water temperature is !{{above|below}} ...",
+          "nl": "Warm water temperatuur is !{{hoger|lager}} dan ..."
+        },
+        "titleFormatted": {
+          "en": "Hot water temperature is !{{above|below}} [[temperature]]°C",
+          "nl": "Warm water temperatuur is !{{hoger|lager}} dan [[temperature]]°C"
+        },
+        "hint": {
+          "en": "Check if the hot water temperature is above or below a value",
+          "nl": "Controleer of de warm water temperatuur hoger of lager is dan een waarde"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=k30-k40"
+          },
+          {
+            "type": "number",
+            "name": "temperature",
+            "title": {
+              "en": "Temperature",
+              "nl": "Temperatuur"
+            },
+            "min": 10,
+            "max": 65,
+            "step": 0.5,
+            "placeholder": {
+              "en": "45",
+              "nl": "45"
+            }
+          }
+        ],
+        "id": "dhw_temperature_above"
+      },
+      {
+        "title": {
+          "en": "Heating/cooling mode is...",
+          "nl": "Verwarmen/koelen modus is..."
+        },
+        "titleFormatted": {
+          "en": "Heating/cooling mode is [[mode]]",
+          "nl": "Verwarmen/koelen modus is [[mode]]"
+        },
+        "hint": {
+          "en": "Check if the heating/cooling mode matches",
+          "nl": "Controleer of de verwarmen/koelen modus overeenkomt"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=k30-k40"
+          },
+          {
+            "type": "dropdown",
+            "name": "mode",
+            "title": {
+              "en": "Mode",
+              "nl": "Modus"
+            },
+            "values": [
+              {
+                "id": "heat",
+                "label": {
+                  "en": "Heating",
+                  "nl": "Verwarmen"
+                }
+              },
+              {
+                "id": "cool",
+                "label": {
+                  "en": "Cooling",
+                  "nl": "Koelen"
+                }
+              },
+              {
+                "id": "off",
+                "label": {
+                  "en": "Off",
+                  "nl": "Uit"
+                }
+              }
+            ]
+          }
+        ],
+        "id": "heat_cool_mode_is"
+      },
+      {
+        "title": {
+          "en": "Heat demand is !{{active|inactive}}",
+          "nl": "Warmtevraag is !{{actief|inactief}}"
+        },
+        "hint": {
+          "en": "Check if the heat pump has an active heat demand",
+          "nl": "Controleer of de warmtepomp een actieve warmtevraag heeft"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=k30-k40"
+          }
+        ],
+        "id": "heat_demand_is"
+      },
+      {
+        "title": {
+          "en": "Modulation is !{{above|below}} ...",
+          "nl": "Modulatie is !{{hoger|lager}} dan ..."
+        },
+        "titleFormatted": {
+          "en": "Modulation is !{{above|below}} [[modulation]]%",
+          "nl": "Modulatie is !{{hoger|lager}} dan [[modulation]]%"
+        },
+        "hint": {
+          "en": "Check if the modulation is above or below a value",
+          "nl": "Controleer of de modulatie hoger of lager is dan een waarde"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=k30-k40"
+          },
+          {
+            "type": "number",
+            "name": "modulation",
+            "title": {
+              "en": "Modulation",
+              "nl": "Modulatie"
+            },
+            "min": 0,
+            "max": 100,
+            "step": 5,
+            "placeholder": {
+              "en": "50",
+              "nl": "50"
+            }
+          }
+        ],
+        "id": "modulation_above"
+      },
+      {
+        "title": {
+          "en": "Outdoor temperature is !{{above|below}} ...",
+          "nl": "Buitentemperatuur is !{{hoger|lager}} dan ..."
+        },
+        "titleFormatted": {
+          "en": "Outdoor temperature is !{{above|below}} [[temperature]]°C",
+          "nl": "Buitentemperatuur is !{{hoger|lager}} dan [[temperature]]°C"
+        },
+        "hint": {
+          "en": "Check if the outdoor temperature is above or below a value",
+          "nl": "Controleer of de buitentemperatuur hoger of lager is dan een waarde"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=k30-k40"
+          },
+          {
+            "type": "number",
+            "name": "temperature",
+            "title": {
+              "en": "Temperature",
+              "nl": "Temperatuur"
+            },
+            "min": -40,
+            "max": 50,
+            "step": 0.5,
+            "placeholder": {
+              "en": "5",
+              "nl": "5"
+            }
+          }
+        ],
+        "id": "outdoor_temperature_above"
+      },
+      {
+        "title": {
+          "en": "System pressure is !{{above|below}} ...",
+          "nl": "Systeemdruk is !{{hoger|lager}} dan ..."
+        },
+        "titleFormatted": {
+          "en": "System pressure is !{{above|below}} [[pressure]] bar",
+          "nl": "Systeemdruk is !{{hoger|lager}} dan [[pressure]] bar"
+        },
+        "hint": {
+          "en": "Check if the system pressure is above or below a value",
+          "nl": "Controleer of de systeemdruk hoger of lager is dan een waarde"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=k30-k40"
+          },
+          {
+            "type": "number",
+            "name": "pressure",
+            "title": {
+              "en": "Pressure",
+              "nl": "Druk"
+            },
+            "min": 0,
+            "max": 4,
+            "step": 0.1,
+            "placeholder": {
+              "en": "1.5",
+              "nl": "1.5"
+            }
+          }
+        ],
+        "id": "system_pressure_above"
+      },
+      {
+        "title": {
+          "en": "Room temperature is !{{above|below}} ...",
+          "nl": "Kamertemperatuur is !{{hoger|lager}} dan ..."
+        },
+        "titleFormatted": {
+          "en": "Room temperature is !{{above|below}} [[temperature]]°C",
+          "nl": "Kamertemperatuur is !{{hoger|lager}} dan [[temperature]]°C"
+        },
+        "hint": {
+          "en": "Check if the room temperature is above or below a value",
+          "nl": "Controleer of de kamertemperatuur hoger of lager is dan een waarde"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=k30-k40"
+          },
+          {
+            "type": "number",
+            "name": "temperature",
+            "title": {
+              "en": "Temperature",
+              "nl": "Temperatuur"
+            },
+            "min": -20,
+            "max": 50,
+            "step": 0.5,
+            "placeholder": {
+              "en": "20",
+              "nl": "20"
+            }
+          }
+        ],
+        "id": "temperature_above"
+      },
+      {
+        "title": {
+          "en": "Thermostat mode is...",
+          "nl": "Thermostaat modus is..."
+        },
+        "titleFormatted": {
+          "en": "Thermostat mode is [[mode]]",
+          "nl": "Thermostaat modus is [[mode]]"
+        },
+        "hint": {
+          "en": "Check if the thermostat mode matches",
+          "nl": "Controleer of de thermostaat modus overeenkomt"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=k30-k40"
+          },
+          {
+            "type": "dropdown",
+            "name": "mode",
+            "title": {
+              "en": "Mode",
+              "nl": "Modus"
+            },
+            "values": [
+              {
+                "id": "off",
+                "label": {
+                  "en": "Off",
+                  "nl": "Uit"
+                }
+              },
+              {
+                "id": "heat",
+                "label": {
+                  "en": "Heat",
+                  "nl": "Verwarmen"
+                }
+              },
+              {
+                "id": "auto",
+                "label": {
+                  "en": "Auto",
+                  "nl": "Automatisch"
+                }
+              }
+            ]
+          }
+        ],
+        "id": "thermostat_mode_is"
+      }
+    ],
+    "actions": [
+      {
+        "title": {
+          "en": "Start hot water boost",
+          "nl": "Start warm water boost"
+        },
+        "titleFormatted": {
+          "en": "Start hot water boost for [[duration]] minutes",
+          "nl": "Start warm water boost voor [[duration]] minuten"
+        },
+        "hint": {
+          "en": "Start the hot water boost to quickly heat up the water tank",
+          "nl": "Start de warm water boost om de boiler snel op te warmen"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=k30-k40"
+          },
+          {
+            "type": "number",
+            "name": "duration",
+            "title": {
+              "en": "Duration (minutes)",
+              "nl": "Duur (minuten)"
+            },
+            "min": 15,
+            "max": 480,
+            "step": 15,
+            "placeholder": {
+              "en": "120",
+              "nl": "120"
+            }
+          }
+        ],
+        "id": "dhw_charge_start"
+      },
+      {
+        "title": {
+          "en": "Stop hot water boost",
+          "nl": "Stop warm water boost"
+        },
+        "titleFormatted": {
+          "en": "Stop hot water boost",
+          "nl": "Stop warm water boost"
+        },
+        "hint": {
+          "en": "Stop the active hot water boost",
+          "nl": "Stop de actieve warm water boost"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=k30-k40"
+          }
+        ],
+        "id": "dhw_charge_stop"
+      },
+      {
+        "title": {
+          "en": "Set hot water mode",
+          "nl": "Stel warm water modus in"
+        },
+        "titleFormatted": {
+          "en": "Set hot water mode to [[dhw_mode]]",
+          "nl": "Stel warm water modus in op [[dhw_mode]]"
+        },
+        "hint": {
+          "en": "Set the domestic hot water operation mode",
+          "nl": "Stel de warm water modus in"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=k30-k40"
+          },
+          {
+            "type": "dropdown",
+            "name": "dhw_mode",
+            "title": {
+              "en": "Mode",
+              "nl": "Modus"
+            },
+            "values": [
+              {
+                "id": "Off",
+                "label": {
+                  "en": "Off",
+                  "nl": "Uit"
+                }
+              },
+              {
+                "id": "eco",
+                "label": {
+                  "en": "Eco+",
+                  "nl": "Eco+"
+                }
+              },
+              {
+                "id": "low",
+                "label": {
+                  "en": "Eco",
+                  "nl": "Eco"
+                }
+              },
+              {
+                "id": "high",
+                "label": {
+                  "en": "Comfort",
+                  "nl": "Comfort"
+                }
+              },
+              {
+                "id": "ownprogram",
+                "label": {
+                  "en": "Auto",
+                  "nl": "Auto"
+                }
+              }
+            ]
+          }
+        ],
+        "id": "set_dhw_mode"
+      },
+      {
+        "title": {
+          "en": "Set room temperature",
+          "nl": "Stel kamertemperatuur in"
+        },
+        "titleFormatted": {
+          "en": "Set room temperature to [[temperature]]°C",
+          "nl": "Stel kamertemperatuur in op [[temperature]]°C"
+        },
+        "hint": {
+          "en": "Set the target room temperature",
+          "nl": "Stel de gewenste kamertemperatuur in"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=k30-k40"
+          },
+          {
+            "type": "number",
+            "name": "temperature",
+            "title": {
+              "en": "Temperature",
+              "nl": "Temperatuur"
+            },
+            "min": 5,
+            "max": 30,
+            "step": 0.5,
+            "placeholder": {
+              "en": "20",
+              "nl": "20"
+            }
+          }
+        ],
+        "id": "set_target_temperature"
+      },
+      {
+        "title": {
+          "en": "Set thermostat mode",
+          "nl": "Stel thermostaat modus in"
+        },
+        "titleFormatted": {
+          "en": "Set thermostat mode to [[mode]]",
+          "nl": "Stel thermostaat modus in op [[mode]]"
+        },
+        "hint": {
+          "en": "Set the thermostat operation mode",
+          "nl": "Stel de thermostaat modus in"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=k30-k40"
+          },
+          {
+            "type": "dropdown",
+            "name": "mode",
+            "title": {
+              "en": "Mode",
+              "nl": "Modus"
+            },
+            "values": [
+              {
+                "id": "off",
+                "label": {
+                  "en": "Off",
+                  "nl": "Uit"
+                }
+              },
+              {
+                "id": "heat",
+                "label": {
+                  "en": "Heat",
+                  "nl": "Verwarmen"
+                }
+              },
+              {
+                "id": "auto",
+                "label": {
+                  "en": "Auto",
+                  "nl": "Automatisch"
+                }
+              }
+            ]
+          }
+        ],
+        "id": "set_thermostat_mode"
+      }
+    ]
+  },
+  "drivers": [
+    {
+      "name": {
+        "en": "Boiler / Heat Pump (K30/K40)",
+        "nl": "Boiler / Warmtepomp (K30/K40)"
+      },
+      "class": "thermostat",
+      "capabilities": [
+        "thermostat_mode",
+        "target_temperature",
+        "measure_temperature",
+        "measure_temperature.outdoor",
+        "measure_temperature.supply",
+        "measure_temperature.return",
+        "heat_cool_mode",
+        "modulation",
+        "system_pressure",
+        "heat_demand",
+        "working_hours",
+        "dhw_operation_mode",
+        "target_temperature.dhw",
+        "measure_temperature.dhw",
+        "dhw_boost",
+        "dhw_charge_remaining"
+      ],
+      "capabilitiesOptions": {
+        "thermostat_mode": {
+          "values": [
+            {
+              "id": "off",
+              "title": {
+                "en": "Off",
+                "nl": "Uit"
+              }
+            },
+            {
+              "id": "heat",
+              "title": {
+                "en": "Heat",
+                "nl": "Verwarmen"
+              }
+            },
+            {
+              "id": "auto",
+              "title": {
+                "en": "Auto",
+                "nl": "Automatisch"
+              }
+            }
+          ]
+        },
+        "target_temperature": {
+          "min": 5,
+          "max": 30,
+          "step": 0.5,
+          "title": {
+            "en": "Room Temperature",
+            "nl": "Kamertemperatuur"
+          }
+        },
+        "target_temperature.dhw": {
+          "min": 30,
+          "max": 65,
+          "step": 1,
+          "title": {
+            "en": "Hot Water Temperature",
+            "nl": "Warm Water Temperatuur"
+          }
+        },
+        "measure_temperature.dhw": {
+          "title": {
+            "en": "Hot Water Temperature",
+            "nl": "Warm Water Temperatuur"
+          }
+        },
+        "measure_temperature.outdoor": {
+          "title": {
+            "en": "Outdoor Temperature",
+            "nl": "Buitentemperatuur"
+          }
+        },
+        "measure_temperature.supply": {
+          "title": {
+            "en": "Supply Temperature",
+            "nl": "Aanvoertemperatuur"
+          },
+          "icon": "/assets/icons/temp-supply.svg"
+        },
+        "measure_temperature.return": {
+          "title": {
+            "en": "Return Temperature",
+            "nl": "Retourtemperatuur"
+          },
+          "icon": "/assets/icons/temp-return.svg"
+        }
+      },
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "cloud"
+      ],
+      "images": {
+        "small": "/drivers/k30-k40/assets/images/small.png",
+        "large": "/drivers/k30-k40/assets/images/large.png",
+        "xlarge": "/drivers/k30-k40/assets/images/xlarge.png"
+      },
+      "pair": [
+        {
+          "id": "login"
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "id": "k30-k40"
+    }
+  ],
+  "capabilities": {
+    "dhw_boost": {
+      "type": "boolean",
+      "title": {
+        "en": "Hot Water Boost",
+        "nl": "Warm Water Boost"
+      },
+      "desc": {
+        "en": "Extra hot water boost",
+        "nl": "Extra warm water boost"
+      },
+      "getable": true,
+      "setable": true,
+      "uiComponent": "toggle",
+      "insights": false
+    },
+    "dhw_charge_remaining": {
+      "type": "number",
+      "title": {
+        "en": "Boost Time Remaining",
+        "nl": "Resterende Boost Tijd"
+      },
+      "units": "min",
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/assets/icons/timer.svg",
+      "insights": false,
+      "decimals": 0,
+      "min": 0
+    },
+    "dhw_operation_mode": {
+      "type": "enum",
+      "title": {
+        "en": "Hot Water Mode",
+        "nl": "Warm Water Modus"
+      },
+      "getable": true,
+      "setable": true,
+      "uiComponent": "picker",
+      "values": [
+        {
+          "id": "Off",
+          "title": {
+            "en": "Off",
+            "nl": "Uit"
+          }
+        },
+        {
+          "id": "eco",
+          "title": {
+            "en": "Eco+",
+            "nl": "Eco+"
+          }
+        },
+        {
+          "id": "low",
+          "title": {
+            "en": "Eco",
+            "nl": "Eco"
+          }
+        },
+        {
+          "id": "high",
+          "title": {
+            "en": "Comfort",
+            "nl": "Comfort"
+          }
+        },
+        {
+          "id": "ownprogram",
+          "title": {
+            "en": "Auto",
+            "nl": "Auto"
+          }
+        }
+      ]
+    },
+    "heat_cool_mode": {
+      "type": "enum",
+      "title": {
+        "en": "Heat/Cool Mode",
+        "nl": "Verwarmen/Koelen"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/assets/icons/heat-cool.svg",
+      "values": [
+        {
+          "id": "heat",
+          "title": {
+            "en": "Heating",
+            "nl": "Verwarmen"
+          }
+        },
+        {
+          "id": "cool",
+          "title": {
+            "en": "Cooling",
+            "nl": "Koelen"
+          }
+        },
+        {
+          "id": "off",
+          "title": {
+            "en": "Off",
+            "nl": "Uit"
+          }
+        }
+      ]
+    },
+    "heat_demand": {
+      "type": "boolean",
+      "title": {
+        "en": "Heat Demand",
+        "nl": "Warmtevraag"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/assets/icons/flame.svg",
+      "insights": true
+    },
+    "modulation": {
+      "type": "number",
+      "title": {
+        "en": "Modulation",
+        "nl": "Modulatie"
+      },
+      "units": "%",
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/assets/icons/modulation.svg",
+      "insights": true,
+      "min": 0,
+      "max": 100,
+      "step": 1
+    },
+    "system_pressure": {
+      "type": "number",
+      "title": {
+        "en": "System Pressure",
+        "nl": "Systeemdruk"
+      },
+      "units": "bar",
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/assets/icons/pressure.svg",
+      "insights": true,
+      "decimals": 1,
+      "min": 0,
+      "max": 5,
+      "step": 0.1
+    },
+    "working_hours": {
+      "type": "number",
+      "title": {
+        "en": "Operating Hours",
+        "nl": "Bedrijfsuren"
+      },
+      "units": "h",
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/assets/icons/clock.svg",
+      "insights": false,
+      "decimals": 0
+    }
+  }
+}

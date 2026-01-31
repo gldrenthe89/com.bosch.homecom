@@ -9,7 +9,7 @@ node_modules/
 
 # Homey compose output
 .homeycompose/.resolved/
-app.json
+# app.json
 
 # Environment
 .env

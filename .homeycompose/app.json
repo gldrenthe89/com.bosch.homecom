@@ -1,0 +1,52 @@
+{
+  "id": "com.bosch.homecom",
+  "version": "1.0.2",
+  "compatibility": ">=5.0.0",
+  "sdk": 3,
+  "platforms": [
+    "local"
+  ],
+  "name": {
+    "en": "Bosch HomeCom Easy",
+    "nl": "Bosch HomeCom Easy"
+  },
+  "description": {
+    "en": "Control your Bosch heating and cooling devices",
+    "nl": "Bedien je Bosch verwarmings- en koelingsapparaten"
+  },
+  "brandColor": "#EA0016",
+  "category": [
+    "climate"
+  ],
+  "tags": {
+    "en": [
+      "bosch",
+      "homecom",
+      "thermostat",
+      "heating",
+      "air conditioning",
+      "heat pump",
+      "climate"
+    ],
+    "nl": [
+      "bosch",
+      "homecom",
+      "thermostaat",
+      "verwarming",
+      "airconditioning",
+      "warmtepomp",
+      "klimaat"
+    ]
+  },
+  "permissions": [],
+  "images": {
+    "small": "/assets/images/small.png",
+    "large": "/assets/images/large.png",
+    "xlarge": "/assets/images/xlarge.png"
+  },
+  "author": {
+    "name": "Geert Lucas Drenthe",
+    "email": "developer@example.com"
+  },
+  "support": "mailto:developer@example.com"
+}
