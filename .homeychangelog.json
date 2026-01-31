@@ -13,5 +13,8 @@
   },
   "1.1.0": {
     "en": "moved auth status to settings and added repair device option"
+  },
+  "1.2.0": {
+    "en": "Remove repair flow and replace with reauthorization via app settings for Bosch K30/K40 devices"
   }
 }
