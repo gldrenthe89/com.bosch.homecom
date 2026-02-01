@@ -22,5 +22,8 @@
   },
   "1.2.2": {
     "en": "Updated branding and icons."
+  },
+  "1.2.3": {
+    "en": "Add GitHub support link in app.json and .homeycompose/app.json"
   }
 }
