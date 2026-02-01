@@ -47,6 +47,7 @@
   "author": {
     "name": "Geert Lucas"
   },
+  "support": "https://github.com/gldrenthe89/com.bosch.homecom/issues",
   "api": {
     "reauthorize": {
       "method": "POST",
