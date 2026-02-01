@@ -7,8 +7,8 @@
     "local"
   ],
   "name": {
-    "en": "Bosch HomeCom Easy",
-    "nl": "Bosch HomeCom Easy"
+    "en": "Bosch HomeCom Easy Community",
+    "nl": "Bosch HomeCom Easy Community"
   },
   "description": {
     "en": "Control your Bosch heating and cooling devices",
@@ -40,9 +40,9 @@
   },
   "permissions": [],
   "images": {
-    "small": "/assets/images/small.png",
-    "large": "/assets/images/large.png",
-    "xlarge": "/assets/images/xlarge.png"
+    "small": "/assets/images/small.jpg",
+    "large": "/assets/images/large.jpg",
+    "xlarge": "/assets/images/xlarge.jpg"
   },
   "author": {
     "name": "Geert Lucas"

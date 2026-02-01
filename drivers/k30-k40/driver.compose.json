@@ -96,9 +96,9 @@
   "platforms": ["local"],
   "connectivity": ["cloud"],
   "images": {
-    "small": "/drivers/k30-k40/assets/images/small.png",
-    "large": "/drivers/k30-k40/assets/images/large.png",
-    "xlarge": "/drivers/k30-k40/assets/images/xlarge.png"
+    "small": "/drivers/k30-k40/assets/images/small.jpg",
+    "large": "/drivers/k30-k40/assets/images/large.jpg",
+    "xlarge": "/drivers/k30-k40/assets/images/xlarge.jpg"
   },
   "pair": [
     {

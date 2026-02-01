@@ -8,8 +8,8 @@
     "local"
   ],
   "name": {
-    "en": "Bosch HomeCom Easy",
-    "nl": "Bosch HomeCom Easy"
+    "en": "Bosch HomeCom Easy Community",
+    "nl": "Bosch HomeCom Easy Community"
   },
   "description": {
     "en": "Control your Bosch heating and cooling devices",
@@ -41,9 +41,9 @@
   },
   "permissions": [],
   "images": {
-    "small": "/assets/images/small.png",
-    "large": "/assets/images/large.png",
-    "xlarge": "/assets/images/xlarge.png"
+    "small": "/assets/images/small.jpg",
+    "large": "/assets/images/large.jpg",
+    "xlarge": "/assets/images/xlarge.jpg"
   },
   "author": {
     "name": "Geert Lucas"
@@ -1166,9 +1166,9 @@
         "cloud"
       ],
       "images": {
-        "small": "/drivers/k30-k40/assets/images/small.png",
-        "large": "/drivers/k30-k40/assets/images/large.png",
-        "xlarge": "/drivers/k30-k40/assets/images/xlarge.png"
+        "small": "/drivers/k30-k40/assets/images/small.jpg",
+        "large": "/drivers/k30-k40/assets/images/large.jpg",
+        "xlarge": "/drivers/k30-k40/assets/images/xlarge.jpg"
       },
       "pair": [
         {
