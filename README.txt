@@ -1,5 +1,3 @@
-Control your Bosch K30/K40 boiler or heat pump with Homey via the Bosch HomeCom Easy cloud service.
-
 FEATURES
 
 - Thermostat control (5-30°C)
@@ -17,31 +15,6 @@ SENSORS
 - Modulation percentage
 - Heat demand indicator
 - Operating hours
-
-FLOW CARDS
-
-Triggers (15):
-- Temperature changes (room, outdoor, hot water, supply, return)
-- Heat demand started/stopped
-- Hot water boost started/stopped
-- Mode changes (thermostat, heating/cooling, hot water)
-- Modulation changed
-- System pressure changed
-- System pressure too low
-
-Conditions (10):
-- Temperature above/below (room, outdoor, hot water)
-- Heat demand active/inactive
-- Hot water boost active/inactive
-- Mode checks (thermostat, heating/cooling, hot water)
-- Modulation above/below
-- System pressure above/below
-
-Actions (5):
-- Set thermostat mode
-- Set room temperature
-- Set hot water mode
-- Start/stop hot water boost
 
 SETUP
 

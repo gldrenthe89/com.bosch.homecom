@@ -1,5 +1,3 @@
-Bedien je Bosch K30/K40 ketel of warmtepomp met Homey via de Bosch HomeCom Easy clouddienst.
-
 FUNCTIES
 
 - Thermostaatregeling (5-30°C)
@@ -17,31 +15,6 @@ SENSOREN
 - Modulatiepercentage
 - Warmtevraag indicator
 - Bedrijfsuren
-
-FLOW KAARTEN
-
-Triggers (15):
-- Temperatuurwijzigingen (kamer, buiten, warm water, aanvoer, retour)
-- Warmtevraag gestart/gestopt
-- Warm water boost gestart/gestopt
-- Moduswijzigingen (thermostaat, verwarmen/koelen, warm water)
-- Modulatie gewijzigd
-- Systeemdruk gewijzigd
-- Systeemdruk te laag
-
-Condities (10):
-- Temperatuur boven/onder (kamer, buiten, warm water)
-- Warmtevraag actief/inactief
-- Warm water boost actief/inactief
-- Moduscontroles (thermostaat, verwarmen/koelen, warm water)
-- Modulatie boven/onder
-- Systeemdruk boven/onder
-
-Acties (5):
-- Thermostaatmodus instellen
-- Kamertemperatuur instellen
-- Warm water modus instellen
-- Warm water boost starten/stoppen
 
 INSTALLATIE
 
