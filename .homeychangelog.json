@@ -25,5 +25,8 @@
   },
   "1.2.3": {
     "en": "Add GitHub support link in app.json and .homeycompose/app.json"
+  },
+  "1.2.4": {
+    "en": "app store verification requested changes "
   }
 }
