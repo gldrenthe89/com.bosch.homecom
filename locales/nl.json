@@ -8,7 +8,7 @@
   "pair": {
     "login": {
       "title": "Inloggen bij Bosch HomeCom",
-      "step1": "Klik op de knop hieronder om de Bosch login pagina te openen:",
+      "step1": "Kopieer de login URL hieronder en open deze in Google Chrome (Firefox wordt niet ondersteund):",
       "step2": "Log in met je Bosch HomeCom Easy account",
       "step3": "Na het inloggen zie je een pagina die niet kan laden. Kopieer de autorisatiecode uit de URL:",
       "step4": "Plak de code hieronder:",

@@ -19,7 +19,7 @@ SENSORS
 SETUP
 
 1. Add device in Homey
-2. Open the login URL in your browser
+2. Open the login URL in Google Chrome (Firefox is not supported)
 3. Login with your Bosch HomeCom Easy account
 4. Copy the authorization code from the redirect URL
 5. Paste the code in Homey to complete setup

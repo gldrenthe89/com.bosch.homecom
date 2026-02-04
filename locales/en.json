@@ -8,7 +8,7 @@
   "pair": {
     "login": {
       "title": "Login to Bosch HomeCom",
-      "step1": "Click the button below to open the Bosch login page:",
+      "step1": "Copy the login URL below and open it in Google Chrome (Firefox is not supported):",
       "step2": "Login with your Bosch HomeCom Easy account",
       "step3": "After login, you will see a page that cannot load. Copy the authorization code from the URL:",
       "step4": "Paste the code below:",
