@@ -28,5 +28,8 @@
   },
   "1.2.4": {
     "en": "app store verification requested changes "
+  },
+  "1.2.5": {
+    "en": "Update login instructions: require Chrome instead of generic browser for compatibility"
   }
 }
