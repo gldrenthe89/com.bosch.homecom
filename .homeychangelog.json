@@ -31,5 +31,8 @@
   },
   "1.2.5": {
     "en": "Update login instructions: require Chrome instead of generic browser for compatibility"
+  },
+  "1.2.6": {
+    "en": "Revise README files: add GitHub support link and issue reporting details, and include question issue template."
   }
 }
