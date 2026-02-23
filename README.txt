@@ -1,3 +1,5 @@
+This is an open-source community app. Questions, suggestions, or issues? Please report them on our GitHub page: https://github.com/gldrenthe89/com.bosch.homecom/issues
+
 FEATURES
 
 - Thermostat control (5-30°C)

@@ -1,3 +1,5 @@
+Dit is een open-source community app. Vragen, suggesties of problemen? Meld ze op onze GitHub-pagina: https://github.com/gldrenthe89/com.bosch.homecom/issues
+
 FUNCTIES
 
 - Thermostaatregeling (5-30°C)
