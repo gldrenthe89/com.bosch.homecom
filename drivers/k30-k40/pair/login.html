@@ -88,6 +88,16 @@
   <div id="login">
     <h2>Login to Bosch HomeCom</h2>
 
+    <div class="info-box">
+      <strong>Setup tips (use Google Chrome, Firefox is not supported):</strong>
+      <ol style="margin: 8px 0 4px 0; padding-left: 20px;">
+        <li>Open the authorization URL below in a <strong>private browser window</strong></li>
+        <li>Open the <strong>Network tab</strong> in Developer Tools (F12), then log in with your credentials</li>
+        <li>After the redirect fails (this is expected), find the request containing <code>code=</code> in the Network tab and copy the code value (ends in -1)</li>
+      </ol>
+      <small>Source: <a href="https://github.com/serbanb11/bosch-homecom-hass?tab=readme-ov-file#step-by-step-instructions" target="_blank">serbanb11/bosch-homecom-hass</a></small>
+    </div>
+
     <div class="step">
       <span class="step-number">1</span>
       <span>Copy the login URL below and open it in Google Chrome (Firefox is not supported):</span>
