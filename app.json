@@ -1187,6 +1187,11 @@
           "template": "add_devices"
         }
       ],
+      "repair": [
+        {
+          "id": "login"
+        }
+      ],
       "id": "k30-k40"
     }
   ],

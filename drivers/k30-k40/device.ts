@@ -114,6 +114,30 @@ class K30K40Device extends OAuth2Device<BoschHomeComOAuth2Client> {
     return modeMap[homeyMode] || 'auto';
   }
 
+  private async ensureValidToken(): Promise<void> {
+    try {
+      const token = this.oAuth2Client.getToken();
+      if (!token?.access_token) return;
+
+      const parts = token.access_token.split('.');
+      if (parts.length !== 3) return;
+
+      const payload = JSON.parse(
+        Buffer.from(parts[1].replace(/-/g, '+').replace(/_/g, '/'), 'base64').toString()
+      );
+      if (!payload.exp) return;
+
+      const bufferMs = 5 * 60 * 1000;
+      if (Date.now() > payload.exp * 1000 - bufferMs) {
+        this.log('[TOKEN] Token expiring soon, proactively refreshing...');
+        await this.oAuth2Client.refreshToken();
+        this.log('[TOKEN] Proactive refresh successful');
+      }
+    } catch (error) {
+      this.error('[TOKEN] Proactive refresh failed:', error);
+    }
+  }
+
   private async syncDeviceState(): Promise<void> {
     if (this.isSyncing) {
       this.log(`[SYNC] syncDeviceState SKIPPED (already syncing)`);
@@ -124,6 +148,7 @@ class K30K40Device extends OAuth2Device<BoschHomeComOAuth2Client> {
     this.isUpdatingFromSync = true;
     this.log(`[SYNC] syncDeviceState STARTED (isUpdatingFromSync=true)`);
     try {
+      await this.ensureValidToken();
       const data = await this.api.getK40Data(this.gatewayId);
       this.log(`[SYNC] Got data from API: dhwCircuits=${!!data.dhwCircuits}, heatingCircuits=${!!data.heatingCircuits}`);
       const driver = this.driver as unknown as K30K40Driver;
@@ -239,7 +264,14 @@ class K30K40Device extends OAuth2Device<BoschHomeComOAuth2Client> {
                           errorMessage.includes('expired');
 
       if (isAuthError) {
-        await this.setUnavailable('Authenticatie verlopen. Ga naar App Instellingen om opnieuw in te loggen.');
+        this.log('[SYNC] Auth error detected, attempting token refresh...');
+        try {
+          await this.oAuth2Client.refreshToken();
+          this.log('[SYNC] Token refresh after auth error succeeded, will retry next cycle');
+        } catch (refreshError) {
+          this.error('[SYNC] Token refresh after auth error failed:', refreshError);
+          await this.setUnavailable('Authentication expired. Use the repair option to re-login.');
+        }
       } else {
         await this.setUnavailable('Kan niet communiceren met apparaat');
       }

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    .step {
+      margin-bottom: 20px;
+    }
+    .step-number {
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      background: #007AFF;
+      color: white;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 24px;
+      margin-right: 10px;
+      font-weight: bold;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      margin-top: 10px;
+      box-sizing: border-box;
+    }
+    .error {
+      color: #d32f2f;
+      margin-top: 10px;
+      display: none;
+    }
+    .url-box {
+      background: #f5f5f5;
+      padding: 12px;
+      border-radius: 8px;
+      margin: 10px 0;
+      word-break: break-all;
+      font-size: 12px;
+      font-family: monospace;
+      max-height: 100px;
+      overflow-y: auto;
+      user-select: all;
+      cursor: text;
+    }
+    button {
+      background: #007AFF;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    button:disabled {
+      background: #ccc;
+    }
+    .info-box {
+      background: #e3f2fd;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 15px 0;
+      border-left: 4px solid #2196F3;
+    }
+    .warning-box {
+      background: #fff3e0;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 15px 0;
+      border-left: 4px solid #ff9800;
+    }
+    .copy-btn {
+      background: #4CAF50;
+      margin-left: 10px;
+      padding: 8px 16px;
+      font-size: 14px;
+    }
+    .loading {
+      display: none;
+      color: #666;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <div id="login">
+    <h2>Re-authenticate with Bosch HomeCom</h2>
+
+    <div class="warning-box">
+      Your authentication has expired. Please log in again to reconnect your device.
+    </div>
+
+    <div class="info-box">
+      <strong>Login tips (use Google Chrome, Firefox is not supported):</strong>
+      <ol style="margin: 8px 0 4px 0; padding-left: 20px;">
+        <li>Open the authorization URL below in a <strong>private browser window</strong></li>
+        <li>Open the <strong>Network tab</strong> in Developer Tools (F12), then log in with your credentials</li>
+        <li>After the redirect fails (this is expected), find the request containing <code>code=</code> in the Network tab and copy the code value (ends in -1)</li>
+      </ol>
+      <small>Source: <a href="https://github.com/serbanb11/bosch-homecom-hass?tab=readme-ov-file#step-by-step-instructions" target="_blank">serbanb11/bosch-homecom-hass</a></small>
+    </div>
+
+    <div class="step">
+      <span class="step-number">1</span>
+      <span>Copy the login URL below and open it in Google Chrome (Firefox is not supported):</span>
+      <p class="loading" id="loading">Loading login URL...</p>
+      <div class="url-box" id="authUrl" style="display: none;"></div>
+      <button id="copyUrlBtn" class="copy-btn" style="display: none;">Copy URL</button>
+    </div>
+
+    <div class="step">
+      <span class="step-number">2</span>
+      <span>Login with your Bosch HomeCom Easy account</span>
+    </div>
+
+    <div class="step">
+      <span class="step-number">3</span>
+      <span>After login, you will see a page that cannot load. Copy the authorization code from the URL:</span>
+    </div>
+
+    <div class="info-box">
+      <small>The URL will look like:</small><br>
+      <code>com.bosch.tt.dashtt.pointt://app/login?code=<strong>XXXXXX-1</strong></code><br>
+      <small>Copy the code after "code=" (ends with -1)</small>
+    </div>
+
+    <div class="step">
+      <span class="step-number">4</span>
+      <span>Paste the code below:</span>
+      <input type="text" id="authCode" placeholder="e.g. abc123-1" autocomplete="off">
+    </div>
+
+    <p class="error" id="error"></p>
+
+    <button id="submitBtn" disabled>Continue</button>
+  </div>
+
+  <script>
+    // Get auth URL immediately (no token check needed for repair)
+    document.getElementById('loading').style.display = 'block';
+
+    Homey.emit('getAuthUrl', {}, function(err, url) {
+      document.getElementById('loading').style.display = 'none';
+
+      if (err) {
+        showError(err.message || 'Failed to get auth URL');
+        return;
+      }
+
+      if (url) {
+        document.getElementById('authUrl').textContent = url;
+        document.getElementById('authUrl').style.display = 'block';
+        document.getElementById('copyUrlBtn').style.display = 'inline-block';
+      }
+    });
+
+    document.getElementById('copyUrlBtn').addEventListener('click', function() {
+      var urlText = document.getElementById('authUrl').textContent;
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(urlText).then(function() {
+          document.getElementById('copyUrlBtn').textContent = 'Copied!';
+          setTimeout(function() {
+            document.getElementById('copyUrlBtn').textContent = 'Copy URL';
+          }, 2000);
+        }).catch(function() {
+          fallbackCopy(urlText);
+        });
+      } else {
+        fallbackCopy(urlText);
+      }
+    });
+
+    function fallbackCopy(text) {
+      var urlBox = document.getElementById('authUrl');
+      var range = document.createRange();
+      range.selectNodeContents(urlBox);
+      var selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+
+      document.getElementById('copyUrlBtn').textContent = 'Selected - Copy manually';
+      setTimeout(function() {
+        document.getElementById('copyUrlBtn').textContent = 'Copy URL';
+      }, 3000);
+    }
+
+    document.getElementById('authCode').addEventListener('input', function() {
+      var code = this.value.trim();
+      document.getElementById('submitBtn').disabled = !code;
+      document.getElementById('error').style.display = 'none';
+    });
+
+    document.getElementById('submitBtn').addEventListener('click', function() {
+      var code = document.getElementById('authCode').value.trim();
+      if (!code) return;
+
+      this.disabled = true;
+      this.textContent = 'Verifying...';
+
+      Homey.emit('login', { code: code }, function(err, result) {
+        if (err) {
+          showError(err.message || 'Login failed');
+          document.getElementById('submitBtn').disabled = false;
+          document.getElementById('submitBtn').textContent = 'Continue';
+          return;
+        }
+        Homey.done();
+      });
+    });
+
+    function showError(message) {
+      var errorEl = document.getElementById('error');
+      errorEl.textContent = message;
+      errorEl.style.display = 'block';
+    }
+  </script>
+</body>
+</html>
