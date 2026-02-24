@@ -1,0 +1,57 @@
+name: Question
+description: Ask a question about the Bosch HomeCom Easy Community app
+title: "[QUESTION] "
+labels: [ "question" ]
+body:
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+      description: A clear description of your question.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: device-model
+    attributes:
+      label: Bosch device model
+      options:
+        - K30
+        - K40
+    validations:
+      required: false
+
+  - type: dropdown
+    id: homey-model
+    attributes:
+      label: Homey model
+      options:
+        - Pro
+        - Pro Mini
+        - Pro (Early 2023)
+        - Self Hosted Server
+    validations:
+      required: false
+
+  - type: input
+    id: app-version
+    attributes:
+      label: App version
+    validations:
+      required: false
+
+  - type: textarea
+    id: what-have-you-tried
+    attributes:
+      label: What have you tried?
+      description: Describe any steps you've already taken to find an answer.
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Any other relevant information, screenshots, or examples.
+    validations:
+      required: false
