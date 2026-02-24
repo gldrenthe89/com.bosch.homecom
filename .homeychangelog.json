@@ -34,5 +34,8 @@
   },
   "1.2.6": {
     "en": "Revise README files: add GitHub support link and issue reporting details, and include question issue template."
+  },
+  "1.2.7": {
+    "en": "Updated Readme and Device Pairing Flow"
   }
 }
