@@ -40,5 +40,8 @@
   },
   "1.3.0": {
     "en": "Add repair flow for Bosch HomeCom: implement re-login with proactive token handling"
+  },
+  "1.4.0": {
+    "en": "Add re-authentication support and improve error handling for Bosch HomeCom API requests"
   }
 }
