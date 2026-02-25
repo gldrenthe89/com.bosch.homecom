@@ -3,7 +3,32 @@
     "poll_interval": {
       "title": "Polling Interval",
       "hint": "How often to check for device updates (in seconds)"
-    }
+    },
+    "auth_title": "Authentication Status",
+    "loading_status": "Loading status...",
+    "status_label": "Status:",
+    "status_valid": "Valid",
+    "status_expired": "Expired",
+    "status_unknown": "Not logged in",
+    "status_read_error": "Error reading status",
+    "expires_label": "Expires:",
+    "token_info": "The access token is automatically refreshed when it expires. The app handles this entirely in the background without any action needed from you. Only when the refresh token expires (after a longer period of inactivity) will you need to log in again. You will recognize this when the device shows as \"unavailable\" in Homey.",
+    "reauth_title": "Re-authenticate",
+    "reauth_intro": "You can log in again to Bosch HomeCom to renew your authentication.",
+    "reauth_start_btn": "Start Re-authentication",
+    "reauth_step1": "Copy the login URL and open it in your browser:",
+    "reauth_step2": "Log in with your Bosch HomeCom Easy account",
+    "reauth_step3": "After logging in, you will see a page that cannot load. Copy the code from the URL:",
+    "reauth_step3_example": "The URL will look like:",
+    "reauth_step3_hint": "Copy the code after \"code=\" (ends with -1)",
+    "reauth_step4": "Paste the code below:",
+    "reauth_placeholder": "e.g. abc123-1",
+    "reauth_submit": "Verify & Save",
+    "reauth_submitting": "Verifying...",
+    "reauth_cancel": "Cancel",
+    "reauth_success": "Successfully re-authenticated!",
+    "copy_url": "Copy URL",
+    "copy_url_done": "Copied!"
   },
   "pair": {
     "login": {

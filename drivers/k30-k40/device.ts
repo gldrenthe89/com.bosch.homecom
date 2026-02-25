@@ -1,6 +1,6 @@
 import { OAuth2Device } from 'homey-oauth2app';
 import type { BoschHomeComOAuth2Client } from '../../lib/BoschHomeComOAuth2Client';
-import { HomeComApi } from '../../lib/api/HomeComApi';
+import { HomeComApi, AuthenticationError } from '../../lib/api/HomeComApi';
 import { DEFAULT_POLL_INTERVAL, ENDPOINTS } from '../../lib/utils/constants';
 
 // Sentinel value for "open sensor" (no sensor connected)
@@ -114,27 +114,15 @@ class K30K40Device extends OAuth2Device<BoschHomeComOAuth2Client> {
     return modeMap[homeyMode] || 'auto';
   }
 
-  private async ensureValidToken(): Promise<void> {
-    try {
-      const token = this.oAuth2Client.getToken();
-      if (!token?.access_token) return;
+  private ensureValidToken(): void {
+    const token = this.oAuth2Client.getToken();
+    if (!token?.access_token) {
+      this.log('[TOKEN] No access token available');
+      throw new AuthenticationError('No access token available');
+    }
 
-      const parts = token.access_token.split('.');
-      if (parts.length !== 3) return;
-
-      const payload = JSON.parse(
-        Buffer.from(parts[1].replace(/-/g, '+').replace(/_/g, '/'), 'base64').toString()
-      );
-      if (!payload.exp) return;
-
-      const bufferMs = 5 * 60 * 1000;
-      if (Date.now() > payload.exp * 1000 - bufferMs) {
-        this.log('[TOKEN] Token expiring soon, proactively refreshing...');
-        await this.oAuth2Client.refreshToken();
-        this.log('[TOKEN] Proactive refresh successful');
-      }
-    } catch (error) {
-      this.error('[TOKEN] Proactive refresh failed:', error);
+    if (!token.refresh_token) {
+      this.log('[TOKEN] WARNING: No refresh token available — cannot refresh when expired');
     }
   }
 
@@ -148,7 +136,7 @@ class K30K40Device extends OAuth2Device<BoschHomeComOAuth2Client> {
     this.isUpdatingFromSync = true;
     this.log(`[SYNC] syncDeviceState STARTED (isUpdatingFromSync=true)`);
     try {
-      await this.ensureValidToken();
+      this.ensureValidToken();
       const data = await this.api.getK40Data(this.gatewayId);
       this.log(`[SYNC] Got data from API: dhwCircuits=${!!data.dhwCircuits}, heatingCircuits=${!!data.heatingCircuits}`);
       const driver = this.driver as unknown as K30K40Driver;
@@ -253,27 +241,13 @@ class K30K40Device extends OAuth2Device<BoschHomeComOAuth2Client> {
       await this.setAvailable();
       this.log(`[SYNC] syncDeviceState COMPLETED`);
     } catch (error) {
-      this.error('Failed to sync device state:', error);
+      this.error('[SYNC] Failed to sync device state:', error);
 
-      // Check if this is an auth error
-      const errorMessage = error instanceof Error ? error.message : String(error);
-      const isAuthError = errorMessage.includes('401') ||
-                          errorMessage.includes('403') ||
-                          errorMessage.includes('Unauthorized') ||
-                          errorMessage.includes('token') ||
-                          errorMessage.includes('expired');
-
-      if (isAuthError) {
-        this.log('[SYNC] Auth error detected, attempting token refresh...');
-        try {
-          await this.oAuth2Client.refreshToken();
-          this.log('[SYNC] Token refresh after auth error succeeded, will retry next cycle');
-        } catch (refreshError) {
-          this.error('[SYNC] Token refresh after auth error failed:', refreshError);
-          await this.setUnavailable('Authentication expired. Use the repair option to re-login.');
-        }
+      if (error instanceof AuthenticationError) {
+        this.error('[SYNC] Authentication error — marking device unavailable');
+        await this.setUnavailable('Authentication expired. Use the repair option to re-login.').catch(this.error);
       } else {
-        await this.setUnavailable('Kan niet communiceren met apparaat');
+        await this.setUnavailable('Kan niet communiceren met apparaat').catch(this.error);
       }
     } finally {
       this.isUpdatingFromSync = false;
@@ -287,20 +261,27 @@ class K30K40Device extends OAuth2Device<BoschHomeComOAuth2Client> {
       return;
     }
 
-    let success = false;
-    if (value === 'off') {
-      success = await this.api.setEndpoint(this.gatewayId, ENDPOINTS.HC_OPERATION_MODE, 'manual');
-      if (success) {
-        success = await this.api.setEndpoint(this.gatewayId, ENDPOINTS.HC_MANUAL_SETPOINT, 5);
+    try {
+      let success = false;
+      if (value === 'off') {
+        success = await this.api.setEndpoint(this.gatewayId, ENDPOINTS.HC_OPERATION_MODE, 'manual');
+        if (success) {
+          success = await this.api.setEndpoint(this.gatewayId, ENDPOINTS.HC_MANUAL_SETPOINT, 5);
+        }
+      } else if (value === 'heat') {
+        success = await this.api.setEndpoint(this.gatewayId, ENDPOINTS.HC_OPERATION_MODE, 'manual');
+      } else if (value === 'auto') {
+        success = await this.api.setEndpoint(this.gatewayId, ENDPOINTS.HC_OPERATION_MODE, 'auto');
       }
-    } else if (value === 'heat') {
-      success = await this.api.setEndpoint(this.gatewayId, ENDPOINTS.HC_OPERATION_MODE, 'manual');
-    } else if (value === 'auto') {
-      success = await this.api.setEndpoint(this.gatewayId, ENDPOINTS.HC_OPERATION_MODE, 'auto');
-    }
 
-    if (!success) {
-      throw new Error(`Failed to set thermostat mode to ${value}`);
+      if (!success) {
+        throw new Error(`Failed to set thermostat mode to ${value}`);
+      }
+    } catch (error) {
+      if (error instanceof AuthenticationError) {
+        await this.setUnavailable('Authentication expired. Use the repair option to re-login.').catch(this.error);
+      }
+      throw error;
     }
 
     await this.syncDeviceState();
@@ -311,9 +292,16 @@ class K30K40Device extends OAuth2Device<BoschHomeComOAuth2Client> {
       return;
     }
 
-    const success = await this.api.setHcRoomSetpoint(this.gatewayId, value);
-    if (!success) {
-      throw new Error(`Failed to set target temperature to ${value}`);
+    try {
+      const success = await this.api.setHcRoomSetpoint(this.gatewayId, value);
+      if (!success) {
+        throw new Error(`Failed to set target temperature to ${value}`);
+      }
+    } catch (error) {
+      if (error instanceof AuthenticationError) {
+        await this.setUnavailable('Authentication expired. Use the repair option to re-login.').catch(this.error);
+      }
+      throw error;
     }
     await this.syncDeviceState();
   }
@@ -323,9 +311,16 @@ class K30K40Device extends OAuth2Device<BoschHomeComOAuth2Client> {
       return;
     }
 
-    const success = await this.api.setDhwOperationMode(this.gatewayId, value);
-    if (!success) {
-      throw new Error(`Failed to set DHW mode to ${value}`);
+    try {
+      const success = await this.api.setDhwOperationMode(this.gatewayId, value);
+      if (!success) {
+        throw new Error(`Failed to set DHW mode to ${value}`);
+      }
+    } catch (error) {
+      if (error instanceof AuthenticationError) {
+        await this.setUnavailable('Authentication expired. Use the repair option to re-login.').catch(this.error);
+      }
+      throw error;
     }
     await this.syncDeviceState();
 
@@ -340,9 +335,16 @@ class K30K40Device extends OAuth2Device<BoschHomeComOAuth2Client> {
       return;
     }
 
-    const success = await this.api.setDhwTemperatureLevel(this.gatewayId, 'eco', value);
-    if (!success) {
-      throw new Error(`Failed to set DHW temperature to ${value}`);
+    try {
+      const success = await this.api.setDhwTemperatureLevel(this.gatewayId, 'eco', value);
+      if (!success) {
+        throw new Error(`Failed to set DHW temperature to ${value}`);
+      }
+    } catch (error) {
+      if (error instanceof AuthenticationError) {
+        await this.setUnavailable('Authentication expired. Use the repair option to re-login.').catch(this.error);
+      }
+      throw error;
     }
     await this.syncDeviceState();
   }

@@ -143,66 +143,88 @@
 </head>
 <body>
   <div class="section">
-    <div class="section-title">Authenticatie Status</div>
+    <div class="section-title" id="auth-title"></div>
 
-    <div id="loading-status" class="loading">Status laden...</div>
+    <div id="loading-status" class="loading"></div>
 
     <div id="status-content" class="hidden">
       <div class="status-row">
-        <span class="status-label">Status:</span>
-        <span class="status-value" id="auth-status">Onbekend</span>
+        <span class="status-label" id="status-label-text"></span>
+        <span class="status-value" id="auth-status"></span>
       </div>
       <div id="expires-info" class="expires-info"></div>
+      <div class="info-box" id="token-info"></div>
     </div>
   </div>
 
   <div id="reauth-section" class="section hidden">
-    <div class="section-title">Opnieuw Inloggen</div>
+    <div class="section-title" id="reauth-title"></div>
 
     <div id="reauth-start">
-      <p>Je kunt opnieuw inloggen bij Bosch HomeCom om je authenticatie te vernieuwen.</p>
-      <button id="startReauthBtn">Start Opnieuw Inloggen</button>
+      <p id="reauth-intro"></p>
+      <button id="startReauthBtn"></button>
     </div>
 
     <div id="reauth-steps" class="hidden">
       <div class="step">
         <span class="step-number">1</span>
-        <span>Kopieer de login URL en open deze in je browser:</span>
+        <span id="reauth-step1-text"></span>
         <div class="url-box" id="authUrl">https://singlekey-id.com/auth/connect/authorize?state=nKqS17oMAxqUsQpMznajIr&nonce=5yPvyTqMS3iPb4c8RfGJg1&code_challenge=Fc6eY3uMBJkFqa4VqcULuLuKC5Do70XMw7oa_Pxafw0&redirect_uri=com.bosch.tt.dashtt.pointt://app/login&client_id=762162C0-FA2D-4540-AE66-6489F189FADC&response_type=code&prompt=login&scope=openid+email+profile+offline_access+pointt.gateway.claiming+pointt.gateway.removal+pointt.gateway.list+pointt.gateway.users+pointt.gateway.resource.dashapp+pointt.castt.flow.token-exchange+bacon+hcc.tariff.read&code_challenge_method=S256&style_id=tt_bsch</div>
-        <button id="copyUrlBtn" class="copy-btn">Kopieer URL</button>
+        <button id="copyUrlBtn" class="copy-btn"></button>
       </div>
 
       <div class="step">
         <span class="step-number">2</span>
-        <span>Log in met je Bosch HomeCom Easy account</span>
+        <span id="reauth-step2-text"></span>
       </div>
 
       <div class="step">
         <span class="step-number">3</span>
-        <span>Na het inloggen zie je een pagina die niet kan laden. Kopieer de code uit de URL:</span>
+        <span id="reauth-step3-text"></span>
         <div class="info-box">
-          <small>De URL ziet er zo uit:</small><br>
+          <small id="reauth-step3-example"></small><br>
           <code>com.bosch.tt.dashtt.pointt://app/login?code=<strong>XXXXXX-1</strong></code><br>
-          <small>Kopieer de code na "code=" (eindigt met -1)</small>
+          <small id="reauth-step3-hint"></small>
         </div>
       </div>
 
       <div class="step">
         <span class="step-number">4</span>
-        <span>Plak de code hieronder:</span>
-        <input type="text" id="authCode" placeholder="bijv. abc123-1" autocomplete="off">
+        <span id="reauth-step4-text"></span>
+        <input type="text" id="authCode" autocomplete="off">
       </div>
 
       <p id="error" class="error hidden"></p>
       <p id="success" class="success hidden"></p>
 
-      <button id="submitBtn" disabled>Verifieer & Opslaan</button>
-      <button id="cancelBtn" class="secondary">Annuleren</button>
+      <button id="submitBtn" disabled></button>
+      <button id="cancelBtn" class="secondary"></button>
     </div>
   </div>
 
   <script>
     function onHomeyReady(Homey) {
+      var __ = Homey.__.bind(Homey);
+
+      // Set all static text from locale files
+      document.getElementById('auth-title').textContent = __('settings.auth_title');
+      document.getElementById('loading-status').textContent = __('settings.loading_status');
+      document.getElementById('status-label-text').textContent = __('settings.status_label');
+      document.getElementById('token-info').textContent = __('settings.token_info');
+      document.getElementById('reauth-title').textContent = __('settings.reauth_title');
+      document.getElementById('reauth-intro').textContent = __('settings.reauth_intro');
+      document.getElementById('startReauthBtn').textContent = __('settings.reauth_start_btn');
+      document.getElementById('reauth-step1-text').textContent = __('settings.reauth_step1');
+      document.getElementById('copyUrlBtn').textContent = __('settings.copy_url');
+      document.getElementById('reauth-step2-text').textContent = __('settings.reauth_step2');
+      document.getElementById('reauth-step3-text').textContent = __('settings.reauth_step3');
+      document.getElementById('reauth-step3-example').textContent = __('settings.reauth_step3_example');
+      document.getElementById('reauth-step3-hint').textContent = __('settings.reauth_step3_hint');
+      document.getElementById('reauth-step4-text').textContent = __('settings.reauth_step4');
+      document.getElementById('authCode').placeholder = __('settings.reauth_placeholder');
+      document.getElementById('submitBtn').textContent = __('settings.reauth_submit');
+      document.getElementById('cancelBtn').textContent = __('settings.reauth_cancel');
+
       function updateStatus() {
         document.getElementById('loading-status').classList.remove('hidden');
         document.getElementById('status-content').classList.add('hidden');
@@ -212,7 +234,7 @@
           document.getElementById('status-content').classList.remove('hidden');
 
           if (err || !tokenJson) {
-            setStatus('unknown', 'Niet ingelogd');
+            setStatus('unknown', __('settings.status_unknown'));
             document.getElementById('expires-info').textContent = '';
             showReauthSection();
             return;
@@ -221,7 +243,7 @@
           try {
             var token = JSON.parse(tokenJson);
             if (!token.access_token) {
-              setStatus('unknown', 'Niet ingelogd');
+              setStatus('unknown', __('settings.status_unknown'));
               showReauthSection();
               return;
             }
@@ -237,19 +259,19 @@
             }
 
             if (isTokenValid) {
-              setStatus('valid', 'Geldig');
+              setStatus('valid', __('settings.status_valid'));
               if (expiresAt) {
                 var expiresDate = new Date(expiresAt);
                 document.getElementById('expires-info').textContent =
-                  'Verloopt: ' + expiresDate.toLocaleString('nl-NL');
+                  __('settings.expires_label') + ' ' + expiresDate.toLocaleString();
               }
             } else {
-              setStatus('expired', 'Verlopen');
+              setStatus('expired', __('settings.status_expired'));
               document.getElementById('expires-info').textContent = '';
             }
             showReauthSection();
           } catch (e) {
-            setStatus('unknown', 'Fout bij lezen status');
+            setStatus('unknown', __('settings.status_read_error'));
             showReauthSection();
           }
         });
@@ -286,10 +308,10 @@
         document.getElementById('error').classList.add('hidden');
         document.getElementById('success').classList.add('hidden');
         document.getElementById('submitBtn').disabled = true;
-        document.getElementById('submitBtn').textContent = 'Verifieer & Opslaan';
+        document.getElementById('submitBtn').textContent = __('settings.reauth_submit');
       }
 
-      // Start reauth button - just show the steps (URL is hardcoded)
+      // Start reauth button
       document.getElementById('startReauthBtn').addEventListener('click', function() {
         document.getElementById('reauth-start').classList.add('hidden');
         document.getElementById('reauth-steps').classList.remove('hidden');
@@ -298,11 +320,12 @@
       // Copy URL button
       document.getElementById('copyUrlBtn').addEventListener('click', function() {
         var urlText = document.getElementById('authUrl').textContent;
+        var copyBtn = document.getElementById('copyUrlBtn');
         if (navigator.clipboard && navigator.clipboard.writeText) {
           navigator.clipboard.writeText(urlText).then(function() {
-            document.getElementById('copyUrlBtn').textContent = 'Gekopieerd!';
+            copyBtn.textContent = __('settings.copy_url_done');
             setTimeout(function() {
-              document.getElementById('copyUrlBtn').textContent = 'Kopieer URL';
+              copyBtn.textContent = __('settings.copy_url');
             }, 2000);
           });
         } else {
@@ -311,9 +334,9 @@
           var selection = window.getSelection();
           selection.removeAllRanges();
           selection.addRange(range);
-          document.getElementById('copyUrlBtn').textContent = 'Geselecteerd';
+          copyBtn.textContent = __('settings.copy_url_done');
           setTimeout(function() {
-            document.getElementById('copyUrlBtn').textContent = 'Kopieer URL';
+            copyBtn.textContent = __('settings.copy_url');
           }, 2000);
         }
       });
@@ -330,17 +353,17 @@
         if (!code) return;
 
         this.disabled = true;
-        this.textContent = 'Verifiëren...';
+        this.textContent = __('settings.reauth_submitting');
 
         Homey.api('POST', '/reauthorize', { code: code }, function(err, result) {
           if (err) {
-            showError(err.message || 'Inloggen mislukt');
+            showError(err.message || __('errors.auth_failed'));
             document.getElementById('submitBtn').disabled = false;
-            document.getElementById('submitBtn').textContent = 'Verifieer & Opslaan';
+            document.getElementById('submitBtn').textContent = __('settings.reauth_submit');
             return;
           }
 
-          showSuccess('Succesvol opnieuw ingelogd!');
+          showSuccess(__('settings.reauth_success'));
           setTimeout(function() {
             resetReauthUI();
             updateStatus();

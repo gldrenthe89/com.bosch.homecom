@@ -15,6 +15,13 @@ import type {
   DeviceType,
 } from './models';
 
+export class AuthenticationError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'AuthenticationError';
+  }
+}
+
 export class HomeComApi {
   private oAuth2Client?: OAuth2Client;
   private directAccessToken?: string;
@@ -104,9 +111,19 @@ export class HomeComApi {
     let result = await this.httpRequest<T>('GET', url, accessToken);
 
     if (result.statusCode === 401 && this.oAuth2Client) {
-      await this.refreshToken();
+      try {
+        await this.refreshToken();
+      } catch (refreshError) {
+        throw new AuthenticationError(
+          `Token refresh failed: ${refreshError instanceof Error ? refreshError.message : String(refreshError)}`
+        );
+      }
       accessToken = this.getAccessToken();
       result = await this.httpRequest<T>('GET', url, accessToken);
+    }
+
+    if (result.statusCode === 401 || result.statusCode === 403) {
+      throw new AuthenticationError(`Authentication failed: ${result.statusCode}`);
     }
 
     if (result.statusCode < 200 || result.statusCode >= 300) {
@@ -123,9 +140,19 @@ export class HomeComApi {
     let result = await this.httpRequest<T>('PUT', url, accessToken, body);
 
     if (result.statusCode === 401 && this.oAuth2Client) {
-      await this.refreshToken();
+      try {
+        await this.refreshToken();
+      } catch (refreshError) {
+        throw new AuthenticationError(
+          `Token refresh failed: ${refreshError instanceof Error ? refreshError.message : String(refreshError)}`
+        );
+      }
       accessToken = this.getAccessToken();
       result = await this.httpRequest<T>('PUT', url, accessToken, body);
+    }
+
+    if (result.statusCode === 401 || result.statusCode === 403) {
+      throw new AuthenticationError(`Authentication failed: ${result.statusCode}`);
     }
 
     if (result.statusCode < 200 || result.statusCode >= 300) {
@@ -192,7 +219,8 @@ export class HomeComApi {
       return await this.get<ApiResponse<T>>(
         `${BOSCHCOM_GATEWAYS_PATH}${gatewayId}${endpoint}`
       );
-    } catch {
+    } catch (error) {
+      if (error instanceof AuthenticationError) throw error;
       return null;
     }
   }
@@ -204,7 +232,8 @@ export class HomeComApi {
         { value }
       );
       return true;
-    } catch {
+    } catch (error) {
+      if (error instanceof AuthenticationError) throw error;
       return false;
     }
   }
@@ -226,7 +255,9 @@ export class HomeComApi {
       hc.manualRoomSetpoint = await this.getEndpoint(gatewayId, ENDPOINTS.HC_MANUAL_SETPOINT);
       hc.operationMode = await this.getEndpoint(gatewayId, ENDPOINTS.HC_OPERATION_MODE);
       hc.heatCoolMode = await this.getEndpoint(gatewayId, ENDPOINTS.HC_HEAT_COOL_MODE);
-    } catch { /* ignore */ }
+    } catch (error) {
+      if (error instanceof AuthenticationError) throw error;
+    }
 
     // Get DHW data
     try {
@@ -241,12 +272,16 @@ export class HomeComApi {
       dhw.chargeDuration = await this.getEndpoint(gatewayId, ENDPOINTS.DHW_CHARGE_DURATION);
       dhw.remainingChargeTime = await this.getEndpoint(gatewayId, ENDPOINTS.DHW_REMAINING_CHARGE_TIME);
       await this.getEndpoint(gatewayId, ENDPOINTS.DHW_CHARGE_SETPOINT);
-    } catch { /* ignore */ }
+    } catch (error) {
+      if (error instanceof AuthenticationError) throw error;
+    }
 
     // Get system modes
     try {
       data.systemModes!.outdoorTemperature = await this.getEndpoint(gatewayId, ENDPOINTS.OUTDOOR_TEMP);
-    } catch { /* ignore */ }
+    } catch (error) {
+      if (error instanceof AuthenticationError) throw error;
+    }
 
     // Get heat source data
     try {
@@ -257,7 +292,9 @@ export class HomeComApi {
       hs.systemPressure = await this.getEndpoint(gatewayId, ENDPOINTS.HEAT_SOURCE_SYSTEM_PRESSURE);
       hs.heatDemand = await this.getEndpoint(gatewayId, ENDPOINTS.HEAT_SOURCE_HEAT_DEMAND);
       hs.workingTime = await this.getEndpoint(gatewayId, ENDPOINTS.HEAT_SOURCE_WORKING_TIME);
-    } catch { /* ignore */ }
+    } catch (error) {
+      if (error instanceof AuthenticationError) throw error;
+    }
 
     return data;
   }

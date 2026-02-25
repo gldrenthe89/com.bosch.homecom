@@ -3,7 +3,32 @@
     "poll_interval": {
       "title": "Polling Interval",
       "hint": "Hoe vaak de apparaatstatus gecontroleerd wordt (in seconden)"
-    }
+    },
+    "auth_title": "Authenticatie Status",
+    "loading_status": "Status laden...",
+    "status_label": "Status:",
+    "status_valid": "Geldig",
+    "status_expired": "Verlopen",
+    "status_unknown": "Niet ingelogd",
+    "status_read_error": "Fout bij lezen status",
+    "expires_label": "Verloopt:",
+    "token_info": "Het access token wordt automatisch ververst zodra het verloopt. De app handelt dit volledig op de achtergrond af, zonder dat je iets hoeft te doen. Alleen wanneer het refresh token verloopt (na langere tijd inactiviteit) is opnieuw inloggen nodig. Dit herken je doordat het apparaat in Homey als \"niet beschikbaar\" wordt getoond.",
+    "reauth_title": "Opnieuw Inloggen",
+    "reauth_intro": "Je kunt opnieuw inloggen bij Bosch HomeCom om je authenticatie te vernieuwen.",
+    "reauth_start_btn": "Start Opnieuw Inloggen",
+    "reauth_step1": "Kopieer de login URL en open deze in je browser:",
+    "reauth_step2": "Log in met je Bosch HomeCom Easy account",
+    "reauth_step3": "Na het inloggen zie je een pagina die niet kan laden. Kopieer de code uit de URL:",
+    "reauth_step3_example": "De URL ziet er zo uit:",
+    "reauth_step3_hint": "Kopieer de code na \"code=\" (eindigt met -1)",
+    "reauth_step4": "Plak de code hieronder:",
+    "reauth_placeholder": "bijv. abc123-1",
+    "reauth_submit": "Verifieer & Opslaan",
+    "reauth_submitting": "Verifi\u00ebren...",
+    "reauth_cancel": "Annuleren",
+    "reauth_success": "Succesvol opnieuw ingelogd!",
+    "copy_url": "Kopieer URL",
+    "copy_url_done": "Gekopieerd!"
   },
   "pair": {
     "login": {

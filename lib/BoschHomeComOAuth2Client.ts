@@ -240,11 +240,18 @@ export class BoschHomeComOAuth2Client extends OAuth2Client {
 
     const tokenData: TokenResponse = JSON.parse(response.body);
 
-    return new OAuth2Token({
+    const newToken = new OAuth2Token({
       access_token: tokenData.access_token,
       refresh_token: tokenData.refresh_token || token.refresh_token,
       token_type: tokenData.token_type || 'Bearer',
       expires_in: tokenData.expires_in,
     });
+
+    // Save the new token to memory and persist to storage
+    // (base class onRefreshToken does this internally, but since we override it we must do it ourselves)
+    await this.setToken(newToken);
+    this.save();
+
+    return newToken;
   }
 }
