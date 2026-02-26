@@ -151,9 +151,6 @@
       overflow-y: auto;
       white-space: pre-wrap;
       word-break: break-word;
-      user-select: text;
-      -webkit-user-select: text;
-      cursor: text;
     }
     .log-entry {
       margin-bottom: 4px;
@@ -208,6 +205,15 @@
     }
     .log-header .section-title {
       margin-bottom: 0;
+    }
+    .log-actions {
+      display: flex;
+      gap: 8px;
+    }
+    button.log-copy {
+      background: #4CAF50;
+      padding: 8px 16px;
+      font-size: 13px;
     }
   </style>
 </head>
@@ -275,7 +281,10 @@
   <div id="log-section" class="section">
     <div class="log-header">
       <div class="section-title" id="log-title"></div>
-      <button id="clearLogBtn" class="danger"></button>
+      <div class="log-actions">
+        <button id="copyLogBtn" class="log-copy"></button>
+        <button id="clearLogBtn" class="danger"></button>
+      </div>
     </div>
     <div id="log-container" class="log-container">
       <div id="log-empty" class="log-empty"></div>
@@ -305,6 +314,7 @@
       document.getElementById('submitBtn').textContent = __('settings.reauth_submit');
       document.getElementById('cancelBtn').textContent = __('settings.reauth_cancel');
       document.getElementById('log-title').textContent = __('settings.log_title');
+      document.getElementById('copyLogBtn').textContent = __('settings.log_copy');
       document.getElementById('clearLogBtn').textContent = __('settings.log_clear');
       document.getElementById('log-empty').textContent = __('settings.log_empty');
 
@@ -375,6 +385,27 @@
         if (key === 'oauth_token') {
           updateStatus();
         }
+      });
+
+      // Copy log button
+      document.getElementById('copyLogBtn').addEventListener('click', function() {
+        var btn = document.getElementById('copyLogBtn');
+        Homey.get('debug_log', function(err, logJson) {
+          if (err || !logJson) return;
+          try {
+            var entries = JSON.parse(logJson);
+            if (!entries || !entries.length) return;
+            var text = entries.map(function(e) {
+              return e.timestamp + ' [' + (e.level || 'info').toUpperCase() + '] ' + e.message;
+            }).join('\n');
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+              navigator.clipboard.writeText(text).then(function() {
+                btn.textContent = __('settings.log_copied');
+                setTimeout(function() { btn.textContent = __('settings.log_copy'); }, 2000);
+              });
+            }
+          } catch (e) { /* ignore */ }
+        });
       });
 
       // Clear log button

@@ -30,6 +30,8 @@
     "copy_url": "Copy URL",
     "copy_url_done": "Copied!",
     "log_title": "Diagnostic Log",
+    "log_copy": "Copy Log",
+    "log_copied": "Copied!",
     "log_clear": "Clear Log",
     "log_empty": "No diagnostic events recorded yet."
   },

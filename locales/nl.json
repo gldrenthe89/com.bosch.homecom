@@ -30,6 +30,8 @@
     "copy_url": "Kopieer URL",
     "copy_url_done": "Gekopieerd!",
     "log_title": "Diagnostisch Log",
+    "log_copy": "Kopieer Log",
+    "log_copied": "Gekopieerd!",
     "log_clear": "Log Wissen",
     "log_empty": "Nog geen diagnostische events geregistreerd."
   },
