@@ -52,5 +52,8 @@
   },
   "1.6.0": {
     "en": "Fix device unavailable after pairing despite valid authentication"
+  },
+  "1.6.1": {
+    "en": "Fix copy diagnostic log button"
   }
 }
