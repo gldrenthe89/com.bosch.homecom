@@ -27,6 +27,7 @@
       "values": [
         { "id": "heat", "label": { "en": "Heating", "nl": "Verwarmen" } },
         { "id": "cool", "label": { "en": "Cooling", "nl": "Koelen" } },
+        { "id": "heatCool", "label": { "en": "Heat + Cool", "nl": "Verwarmen + Koelen" } },
         { "id": "off", "label": { "en": "Off", "nl": "Uit" } }
       ]
     }

@@ -269,6 +269,15 @@ export class BoschHomeComOAuth2Client extends OAuth2Client {
     (this as any)._token = newToken;
     this.save();
 
+    // Update the stored token in app settings so the settings page shows correct status
+    this.homey.settings.set('oauth_token', JSON.stringify({
+      access_token: newToken.access_token,
+      refresh_token: newToken.refresh_token,
+      token_type: newToken.token_type,
+      expires_in: newToken.expires_in,
+      stored_at: Date.now(),
+    }));
+
     return newToken;
   }
 }

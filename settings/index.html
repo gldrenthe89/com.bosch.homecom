@@ -364,10 +364,13 @@
         });
       }
 
-      // Real-time log updates
+      // Real-time updates
       Homey.on('settings.set', function(key) {
         if (key === 'debug_log') {
           loadDebugLog();
+        }
+        if (key === 'oauth_token') {
+          updateStatus();
         }
       });
 

@@ -618,6 +618,13 @@
                 }
               },
               {
+                "id": "heatCool",
+                "label": {
+                  "en": "Heat + Cool",
+                  "nl": "Verwarmen + Koelen"
+                }
+              },
+              {
                 "id": "off",
                 "label": {
                   "en": "Off",
@@ -1300,6 +1307,13 @@
           "title": {
             "en": "Cooling",
             "nl": "Koelen"
+          }
+        },
+        {
+          "id": "heatCool",
+          "title": {
+            "en": "Heat + Cool",
+            "nl": "Verwarmen + Koelen"
           }
         },
         {

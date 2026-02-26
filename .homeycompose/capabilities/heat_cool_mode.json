@@ -24,6 +24,13 @@
       }
     },
     {
+      "id": "heatCool",
+      "title": {
+        "en": "Heat + Cool",
+        "nl": "Verwarmen + Koelen"
+      }
+    },
+    {
       "id": "off",
       "title": {
         "en": "Off",
