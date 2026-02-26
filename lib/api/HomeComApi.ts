@@ -122,7 +122,7 @@ export class HomeComApi {
       result = await this.httpRequest<T>('GET', url, accessToken);
     }
 
-    if (result.statusCode === 401 || result.statusCode === 403) {
+    if (result.statusCode === 401) {
       throw new AuthenticationError(`Authentication failed: ${result.statusCode}`);
     }
 
@@ -151,7 +151,7 @@ export class HomeComApi {
       result = await this.httpRequest<T>('PUT', url, accessToken, body);
     }
 
-    if (result.statusCode === 401 || result.statusCode === 403) {
+    if (result.statusCode === 401) {
       throw new AuthenticationError(`Authentication failed: ${result.statusCode}`);
     }
 

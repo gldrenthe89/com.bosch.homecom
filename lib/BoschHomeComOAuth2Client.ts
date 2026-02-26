@@ -248,8 +248,8 @@ export class BoschHomeComOAuth2Client extends OAuth2Client {
     });
 
     // Save the new token to memory and persist to storage
-    // (base class onRefreshToken does this internally, but since we override it we must do it ourselves)
-    await this.setToken(newToken);
+    // Direct _token assignment matches how the base class stores tokens internally
+    (this as any)._token = newToken;
     this.save();
 
     return newToken;

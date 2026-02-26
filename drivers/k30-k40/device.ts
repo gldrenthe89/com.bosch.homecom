@@ -246,9 +246,8 @@ class K30K40Device extends OAuth2Device<BoschHomeComOAuth2Client> {
       if (error instanceof AuthenticationError) {
         this.error('[SYNC] Authentication error — marking device unavailable');
         await this.setUnavailable('Authentication expired. Use the repair option to re-login.').catch(this.error);
-      } else {
-        await this.setUnavailable('Kan niet communiceren met apparaat').catch(this.error);
       }
+      // Andere errors: niet unavailable maken, volgende poll probeert opnieuw
     } finally {
       this.isUpdatingFromSync = false;
       this.isSyncing = false;
