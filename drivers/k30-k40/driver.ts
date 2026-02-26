@@ -2,6 +2,7 @@ import { OAuth2Driver } from 'homey-oauth2app';
 import type { FlowCardTriggerDevice } from 'homey';
 import { BoschHomeComOAuth2Client } from '../../lib/BoschHomeComOAuth2Client';
 import { HomeComApi } from '../../lib/api/HomeComApi';
+import { addDebugLogEntry, createDebugLogFn, sanitizeErrorMessage } from '../../lib/utils/DebugLog';
 
 interface StoredToken {
   access_token: string;
@@ -239,9 +240,11 @@ class K30K40Driver extends OAuth2Driver<BoschHomeComOAuth2Client> {
 
         (oAuth2Client as any).setToken({ token });
         await oAuth2Client.save();
+        addDebugLogEntry(this.homey, 'info', '[PAIR] Pair login succeeded');
         return true;
       } catch (error) {
         this.error('Login failed:', error);
+        addDebugLogEntry(this.homey, 'error', `[PAIR] Pair login failed: ${sanitizeErrorMessage(error instanceof Error ? error.message : String(error))}`);
         throw error;
       }
     });
@@ -256,7 +259,8 @@ class K30K40Driver extends OAuth2Driver<BoschHomeComOAuth2Client> {
       }
 
       try {
-        const api = new HomeComApi(accessToken);
+        const debugLog = createDebugLogFn(this.homey);
+        const api = new HomeComApi(accessToken, debugLog);
         const gateways = await api.getDevices();
 
         const devices: Array<{
@@ -289,6 +293,7 @@ class K30K40Driver extends OAuth2Driver<BoschHomeComOAuth2Client> {
         return devices;
       } catch (error) {
         this.error('Failed to list devices:', error);
+        addDebugLogEntry(this.homey, 'error', `[PAIR] Failed to list devices: ${sanitizeErrorMessage(error instanceof Error ? error.message : String(error))}`);
         throw error;
       }
     });
@@ -327,9 +332,11 @@ class K30K40Driver extends OAuth2Driver<BoschHomeComOAuth2Client> {
 
         (oAuth2Client as any).setToken({ token });
         await oAuth2Client.save();
+        addDebugLogEntry(this.homey, 'info', '[PAIR] Repair login succeeded');
         return true;
       } catch (error) {
         this.error('Repair login failed:', error);
+        addDebugLogEntry(this.homey, 'error', `[PAIR] Repair login failed: ${sanitizeErrorMessage(error instanceof Error ? error.message : String(error))}`);
         throw error;
       }
     });
@@ -342,7 +349,8 @@ class K30K40Driver extends OAuth2Driver<BoschHomeComOAuth2Client> {
       store: { gatewayId: string };
     }>
   > {
-    const api = new HomeComApi(oAuth2Client);
+    const debugLog = createDebugLogFn(this.homey);
+    const api = new HomeComApi(oAuth2Client, debugLog);
     const gateways = await api.getDevices();
 
     const devices: Array<{

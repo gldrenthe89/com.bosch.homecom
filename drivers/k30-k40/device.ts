@@ -2,6 +2,7 @@ import { OAuth2Device } from 'homey-oauth2app';
 import type { BoschHomeComOAuth2Client } from '../../lib/BoschHomeComOAuth2Client';
 import { HomeComApi, AuthenticationError } from '../../lib/api/HomeComApi';
 import { DEFAULT_POLL_INTERVAL, ENDPOINTS } from '../../lib/utils/constants';
+import { addDebugLogEntry, sanitizeErrorMessage } from '../../lib/utils/DebugLog';
 
 // Sentinel value for "open sensor" (no sensor connected)
 const OPEN_SENSOR_VALUE = -32768;
@@ -13,6 +14,10 @@ interface K30K40Driver {
   systemPressureLowTrigger: { trigger: (device: K30K40Device, tokens: Record<string, unknown>) => Promise<void> };
 }
 
+interface BoschHomeComApp {
+  getDebugLogFn(): (level: 'info' | 'warn' | 'error', message: string) => void;
+}
+
 class K30K40Device extends OAuth2Device<BoschHomeComOAuth2Client> {
   public api!: HomeComApi;
   public gatewayId!: string;
@@ -22,7 +27,8 @@ class K30K40Device extends OAuth2Device<BoschHomeComOAuth2Client> {
   private isUpdatingFromSync: boolean = false;
 
   async onOAuth2Init(): Promise<void> {
-    this.api = new HomeComApi(this.oAuth2Client);
+    const app = this.homey.app as unknown as BoschHomeComApp;
+    this.api = new HomeComApi(this.oAuth2Client, app.getDebugLogFn());
     this.gatewayId = this.getStoreValue('gatewayId') as string;
 
     // Add new capabilities if not present (for devices paired before this update)
@@ -39,16 +45,25 @@ class K30K40Device extends OAuth2Device<BoschHomeComOAuth2Client> {
     ];
     for (const cap of newCapabilities) {
       if (!this.hasCapability(cap)) {
-        await this.addCapability(cap).catch(this.error);
+        await this.addCapability(cap).catch((err: Error) => {
+          this.error(err);
+          addDebugLogEntry(this.homey, 'warn', `[DEVICE] Failed to add capability "${cap}": ${err.message}`);
+        });
       }
     }
 
     // Remove deprecated capabilities
     if (this.hasCapability('measure_humidity')) {
-      await this.removeCapability('measure_humidity').catch(this.error);
+      await this.removeCapability('measure_humidity').catch((err: Error) => {
+        this.error(err);
+        addDebugLogEntry(this.homey, 'warn', `[DEVICE] Failed to remove capability "measure_humidity": ${err.message}`);
+      });
     }
     if (this.hasCapability('alarm_generic.away')) {
-      await this.removeCapability('alarm_generic.away').catch(this.error);
+      await this.removeCapability('alarm_generic.away').catch((err: Error) => {
+        this.error(err);
+        addDebugLogEntry(this.homey, 'warn', `[DEVICE] Failed to remove capability "alarm_generic.away": ${err.message}`);
+      });
     }
 
     // Register capability listeners
@@ -117,12 +132,14 @@ class K30K40Device extends OAuth2Device<BoschHomeComOAuth2Client> {
   private ensureValidToken(): void {
     const token = this.oAuth2Client.getToken();
     if (!token?.access_token) {
-      this.log('[TOKEN] No access token available');
+      this.log('[AUTH] No access token available');
+      addDebugLogEntry(this.homey, 'error', '[AUTH] No access token available');
       throw new AuthenticationError('No access token available');
     }
 
     if (!token.refresh_token) {
-      this.log('[TOKEN] WARNING: No refresh token available — cannot refresh when expired');
+      this.log('[AUTH] WARNING: No refresh token available — cannot refresh when expired');
+      addDebugLogEntry(this.homey, 'warn', '[AUTH] No refresh token available — cannot refresh when expired');
     }
   }
 
@@ -245,9 +262,12 @@ class K30K40Device extends OAuth2Device<BoschHomeComOAuth2Client> {
 
       if (error instanceof AuthenticationError) {
         this.error('[SYNC] Authentication error — marking device unavailable');
+        addDebugLogEntry(this.homey, 'error', '[SYNC] Authentication error — device marked unavailable');
         await this.setUnavailable('Authentication expired. Use the repair option to re-login.').catch(this.error);
+      } else {
+        const msg = error instanceof Error ? error.message : String(error);
+        addDebugLogEntry(this.homey, 'warn', `[SYNC] Sync failed: ${sanitizeErrorMessage(msg)}`);
       }
-      // Andere errors: niet unavailable maken, volgende poll probeert opnieuw
     } finally {
       this.isUpdatingFromSync = false;
       this.isSyncing = false;
@@ -278,7 +298,10 @@ class K30K40Device extends OAuth2Device<BoschHomeComOAuth2Client> {
       }
     } catch (error) {
       if (error instanceof AuthenticationError) {
+        addDebugLogEntry(this.homey, 'error', '[DEVICE] Set thermostat mode failed: authentication expired');
         await this.setUnavailable('Authentication expired. Use the repair option to re-login.').catch(this.error);
+      } else {
+        addDebugLogEntry(this.homey, 'warn', `[DEVICE] Set thermostat mode to "${value}" failed`);
       }
       throw error;
     }
@@ -298,7 +321,10 @@ class K30K40Device extends OAuth2Device<BoschHomeComOAuth2Client> {
       }
     } catch (error) {
       if (error instanceof AuthenticationError) {
+        addDebugLogEntry(this.homey, 'error', '[DEVICE] Set target temperature failed: authentication expired');
         await this.setUnavailable('Authentication expired. Use the repair option to re-login.').catch(this.error);
+      } else {
+        addDebugLogEntry(this.homey, 'warn', `[DEVICE] Set target temperature to ${value} failed`);
       }
       throw error;
     }
@@ -317,7 +343,10 @@ class K30K40Device extends OAuth2Device<BoschHomeComOAuth2Client> {
       }
     } catch (error) {
       if (error instanceof AuthenticationError) {
+        addDebugLogEntry(this.homey, 'error', '[DEVICE] Set DHW mode failed: authentication expired');
         await this.setUnavailable('Authentication expired. Use the repair option to re-login.').catch(this.error);
+      } else {
+        addDebugLogEntry(this.homey, 'warn', `[DEVICE] Set DHW mode to "${value}" failed`);
       }
       throw error;
     }
@@ -341,7 +370,10 @@ class K30K40Device extends OAuth2Device<BoschHomeComOAuth2Client> {
       }
     } catch (error) {
       if (error instanceof AuthenticationError) {
+        addDebugLogEntry(this.homey, 'error', '[DEVICE] Set DHW temperature failed: authentication expired');
         await this.setUnavailable('Authentication expired. Use the repair option to re-login.').catch(this.error);
+      } else {
+        addDebugLogEntry(this.homey, 'warn', `[DEVICE] Set DHW temperature to ${value} failed`);
       }
       throw error;
     }
@@ -353,10 +385,20 @@ class K30K40Device extends OAuth2Device<BoschHomeComOAuth2Client> {
       return;
     }
 
-    if (value) {
-      await this.startDhwCharge();
-    } else {
-      await this.stopDhwCharge();
+    try {
+      if (value) {
+        await this.startDhwCharge();
+      } else {
+        await this.stopDhwCharge();
+      }
+    } catch (error) {
+      if (error instanceof AuthenticationError) {
+        addDebugLogEntry(this.homey, 'error', '[DEVICE] DHW boost toggle failed: authentication expired');
+        await this.setUnavailable('Authentication expired. Use the repair option to re-login.').catch(this.error);
+      } else {
+        addDebugLogEntry(this.homey, 'warn', `[DEVICE] DHW boost ${value ? 'start' : 'stop'} failed`);
+      }
+      throw error;
     }
     await this.syncDeviceState();
   }

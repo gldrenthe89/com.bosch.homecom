@@ -1,5 +1,6 @@
 import { OAuth2App, OAuth2Token } from 'homey-oauth2app';
 import { BoschHomeComOAuth2Client } from './lib/BoschHomeComOAuth2Client';
+import { addDebugLogEntry, createDebugLogFn, type DebugLogFn } from './lib/utils/DebugLog';
 
 interface StoredToken {
   access_token: string;
@@ -14,8 +15,15 @@ class BoschHomeComApp extends OAuth2App {
   static OAUTH2_DEBUG = false;
   static OAUTH2_MULTI_SESSION = false;
 
+  private debugLogFn!: DebugLogFn;
+
   async onOAuth2Init(): Promise<void> {
-    // App initialization complete
+    this.debugLogFn = createDebugLogFn(this.homey);
+    addDebugLogEntry(this.homey, 'info', '[APP] BoschHomeComApp initialized');
+  }
+
+  getDebugLogFn(): DebugLogFn {
+    return this.debugLogFn;
   }
 
   /**
@@ -30,6 +38,7 @@ class BoschHomeComApp extends OAuth2App {
       stored_at: Date.now(),
     };
     this.homey.settings.set('oauth_token', JSON.stringify(tokenData));
+    addDebugLogEntry(this.homey, 'info', `[AUTH] Token stored (expires_in=${token.expires_in}s, has_refresh=${!!token.refresh_token})`);
   }
 
   /**
@@ -77,6 +86,7 @@ class BoschHomeComApp extends OAuth2App {
    */
   clearToken(): void {
     this.homey.settings.unset('oauth_token');
+    addDebugLogEntry(this.homey, 'info', '[AUTH] Token cleared');
   }
 }
 

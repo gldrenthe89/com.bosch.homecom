@@ -52,6 +52,10 @@
     "reauthorize": {
       "method": "POST",
       "path": "/reauthorize"
+    },
+    "clearDebugLog": {
+      "method": "POST",
+      "path": "/clearDebugLog"
     }
   }
 }

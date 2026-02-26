@@ -28,7 +28,10 @@
     "reauth_cancel": "Cancel",
     "reauth_success": "Successfully re-authenticated!",
     "copy_url": "Copy URL",
-    "copy_url_done": "Copied!"
+    "copy_url_done": "Copied!",
+    "log_title": "Diagnostic Log",
+    "log_clear": "Clear Log",
+    "log_empty": "No diagnostic events recorded yet."
   },
   "pair": {
     "login": {

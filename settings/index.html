@@ -139,6 +139,73 @@
       margin-top: 10px;
     }
     .hidden { display: none; }
+    .log-container {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      font-family: 'SF Mono', 'Menlo', 'Monaco', 'Courier New', monospace;
+      font-size: 12px;
+      line-height: 1.5;
+      padding: 12px;
+      border-radius: 8px;
+      max-height: 400px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .log-entry {
+      margin-bottom: 4px;
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+    .log-timestamp {
+      color: #808080;
+      flex-shrink: 0;
+    }
+    .log-badge {
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      flex-shrink: 0;
+    }
+    .log-badge-info {
+      background: #0d47a1;
+      color: #90caf9;
+    }
+    .log-badge-warn {
+      background: #e65100;
+      color: #ffcc80;
+    }
+    .log-badge-error {
+      background: #b71c1c;
+      color: #ef9a9a;
+    }
+    .log-message {
+      flex: 1;
+    }
+    .log-empty {
+      color: #808080;
+      font-style: italic;
+      text-align: center;
+      padding: 20px;
+    }
+    button.danger {
+      background: #d32f2f;
+    }
+    button.danger:hover {
+      background: #b71c1c;
+    }
+    .log-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .log-header .section-title {
+      margin-bottom: 0;
+    }
   </style>
 </head>
 <body>
@@ -202,6 +269,16 @@
     </div>
   </div>
 
+  <div id="log-section" class="section">
+    <div class="log-header">
+      <div class="section-title" id="log-title"></div>
+      <button id="clearLogBtn" class="danger"></button>
+    </div>
+    <div id="log-container" class="log-container">
+      <div id="log-empty" class="log-empty"></div>
+    </div>
+  </div>
+
   <script>
     function onHomeyReady(Homey) {
       var __ = Homey.__.bind(Homey);
@@ -224,6 +301,84 @@
       document.getElementById('authCode').placeholder = __('settings.reauth_placeholder');
       document.getElementById('submitBtn').textContent = __('settings.reauth_submit');
       document.getElementById('cancelBtn').textContent = __('settings.reauth_cancel');
+      document.getElementById('log-title').textContent = __('settings.log_title');
+      document.getElementById('clearLogBtn').textContent = __('settings.log_clear');
+      document.getElementById('log-empty').textContent = __('settings.log_empty');
+
+      function formatTimestamp(isoString) {
+        try {
+          var d = new Date(isoString);
+          return d.toLocaleString(undefined, {
+            month: '2-digit', day: '2-digit',
+            hour: '2-digit', minute: '2-digit', second: '2-digit'
+          });
+        } catch (e) {
+          return isoString;
+        }
+      }
+
+      function renderLog(entries) {
+        var container = document.getElementById('log-container');
+        var emptyEl = document.getElementById('log-empty');
+
+        if (!entries || entries.length === 0) {
+          container.innerHTML = '';
+          container.appendChild(emptyEl);
+          emptyEl.style.display = 'block';
+          return;
+        }
+
+        emptyEl.style.display = 'none';
+        var html = '';
+        // Newest first
+        for (var i = entries.length - 1; i >= 0; i--) {
+          var entry = entries[i];
+          var safeLevel = {'info':'info','warn':'warn','error':'error'}[entry.level] || 'info';
+          html += '<div class="log-entry">';
+          html += '<span class="log-timestamp">' + escapeHtml(formatTimestamp(entry.timestamp)) + '</span>';
+          html += '<span class="log-badge log-badge-' + safeLevel + '">' + safeLevel + '</span>';
+          html += '<span class="log-message">' + escapeHtml(entry.message) + '</span>';
+          html += '</div>';
+        }
+        container.innerHTML = html;
+      }
+
+      function escapeHtml(str) {
+        var div = document.createElement('div');
+        div.appendChild(document.createTextNode(str));
+        return div.innerHTML;
+      }
+
+      function loadDebugLog() {
+        Homey.get('debug_log', function(err, logJson) {
+          if (err || !logJson) {
+            renderLog([]);
+            return;
+          }
+          try {
+            var entries = JSON.parse(logJson);
+            renderLog(entries);
+          } catch (e) {
+            renderLog([]);
+          }
+        });
+      }
+
+      // Real-time log updates
+      Homey.on('settings.set', function(key) {
+        if (key === 'debug_log') {
+          loadDebugLog();
+        }
+      });
+
+      // Clear log button
+      document.getElementById('clearLogBtn').addEventListener('click', function() {
+        Homey.api('POST', '/clearDebugLog', null, function(err) {
+          if (!err) {
+            renderLog([]);
+          }
+        });
+      });
 
       function updateStatus() {
         document.getElementById('loading-status').classList.remove('hidden');
@@ -377,6 +532,7 @@
       });
 
       updateStatus();
+      loadDebugLog();
       Homey.ready();
     }
   </script>

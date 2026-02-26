@@ -10,6 +10,7 @@ import {
   OAUTH_BROWSER_CHALLENGE,
   BOSCHCOM_DOMAIN,
 } from './utils/constants';
+import { addDebugLogEntry, sanitizeErrorMessage, type DebugLogFn } from './utils/DebugLog';
 import https from 'https';
 
 interface TokenResponse {
@@ -62,8 +63,10 @@ export function getManualAuthorizationUrl(): string {
 /**
  * Exchange authorization code for tokens (standalone function for use outside OAuth2Client)
  */
-export async function exchangeCodeForToken(code: string): Promise<OAuth2Token> {
+export async function exchangeCodeForToken(code: string, debugLog?: DebugLogFn): Promise<OAuth2Token> {
   const tokenUrl = `${OAUTH_DOMAIN}${OAUTH_TOKEN_PATH}`;
+
+  debugLog?.('info', '[AUTH] Token exchange started');
 
   const body = new URLSearchParams();
   body.set('grant_type', 'authorization_code');
@@ -86,12 +89,15 @@ export async function exchangeCodeForToken(code: string): Promise<OAuth2Token> {
       const errorData = JSON.parse(response.body);
       errorMessage = errorData.error_description || errorData.error || errorMessage;
     } catch {
-      errorMessage = response.body || errorMessage;
+      errorMessage = (response.body || errorMessage).substring(0, 100);
     }
-    throw new Error(errorMessage);
+    debugLog?.('error', `[AUTH] Token exchange failed: ${sanitizeErrorMessage(errorMessage)}`);
+    throw new Error(sanitizeErrorMessage(errorMessage));
   }
 
   const tokenData: TokenResponse = JSON.parse(response.body);
+
+  debugLog?.('info', `[AUTH] Token exchange succeeded (expires_in=${tokenData.expires_in}s)`);
 
   return new OAuth2Token({
     access_token: tokenData.access_token,
@@ -154,6 +160,8 @@ export class BoschHomeComOAuth2Client extends OAuth2Client {
    * This is used for the manual login flow
    */
   async exchangeCodeForToken(code: string): Promise<OAuth2Token> {
+    addDebugLogEntry(this.homey, 'info', '[AUTH] Token exchange started');
+
     const body = new URLSearchParams();
     body.set('grant_type', 'authorization_code');
     body.set('client_id', OAUTH_CLIENT_ID);
@@ -175,12 +183,15 @@ export class BoschHomeComOAuth2Client extends OAuth2Client {
         const errorData = JSON.parse(response.body);
         errorMessage = errorData.error_description || errorData.error || errorMessage;
       } catch {
-        errorMessage = response.body || errorMessage;
+        errorMessage = (response.body || errorMessage).substring(0, 100);
       }
-      throw new Error(errorMessage);
+      addDebugLogEntry(this.homey, 'error', `[AUTH] Token exchange failed: ${sanitizeErrorMessage(errorMessage)}`);
+      throw new Error(sanitizeErrorMessage(errorMessage));
     }
 
     const tokenData: TokenResponse = JSON.parse(response.body);
+
+    addDebugLogEntry(this.homey, 'info', `[AUTH] Token exchange succeeded (expires_in=${tokenData.expires_in}s)`);
 
     return new OAuth2Token({
       access_token: tokenData.access_token,
@@ -211,8 +222,11 @@ export class BoschHomeComOAuth2Client extends OAuth2Client {
   async onRefreshToken(): Promise<OAuth2Token> {
     const token = this.getToken();
     if (!token?.refresh_token) {
+      addDebugLogEntry(this.homey, 'error', '[AUTH] Token refresh failed: no refresh token available');
       throw new Error('No refresh token available');
     }
+
+    addDebugLogEntry(this.homey, 'info', '[AUTH] Token refresh started');
 
     const body = new URLSearchParams();
     body.set('grant_type', 'refresh_token');
@@ -233,9 +247,10 @@ export class BoschHomeComOAuth2Client extends OAuth2Client {
         const errorData = JSON.parse(response.body);
         errorMessage = errorData.error_description || errorData.error || errorMessage;
       } catch {
-        errorMessage = response.body || errorMessage;
+        errorMessage = (response.body || errorMessage).substring(0, 100);
       }
-      throw new Error(errorMessage);
+      addDebugLogEntry(this.homey, 'error', `[AUTH] Token refresh failed: ${sanitizeErrorMessage(errorMessage)}`);
+      throw new Error(sanitizeErrorMessage(errorMessage));
     }
 
     const tokenData: TokenResponse = JSON.parse(response.body);
@@ -246,6 +261,8 @@ export class BoschHomeComOAuth2Client extends OAuth2Client {
       token_type: tokenData.token_type || 'Bearer',
       expires_in: tokenData.expires_in,
     });
+
+    addDebugLogEntry(this.homey, 'info', `[AUTH] Token refresh succeeded (expires_in=${tokenData.expires_in}s)`);
 
     // Save the new token to memory and persist to storage
     // Direct _token assignment matches how the base class stores tokens internally

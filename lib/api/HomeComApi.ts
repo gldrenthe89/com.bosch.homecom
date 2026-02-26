@@ -14,6 +14,7 @@ import type {
   BulkResponse,
   DeviceType,
 } from './models';
+import { sanitizeErrorMessage, type DebugLogFn } from '../utils/DebugLog';
 
 export class AuthenticationError extends Error {
   constructor(message: string) {
@@ -25,13 +26,15 @@ export class AuthenticationError extends Error {
 export class HomeComApi {
   private oAuth2Client?: OAuth2Client;
   private directAccessToken?: string;
+  private debugLog?: DebugLogFn;
 
-  constructor(oAuth2ClientOrToken: OAuth2Client | string) {
+  constructor(oAuth2ClientOrToken: OAuth2Client | string, debugLog?: DebugLogFn) {
     if (typeof oAuth2ClientOrToken === 'string') {
       this.directAccessToken = oAuth2ClientOrToken;
     } else {
       this.oAuth2Client = oAuth2ClientOrToken;
     }
+    this.debugLog = debugLog;
   }
 
   private getAccessToken(): string {
@@ -86,7 +89,7 @@ export class HomeComApi {
               try {
                 resolve({ statusCode, data: data ? JSON.parse(data) : ({} as T) });
               } catch {
-                reject(new Error(`Failed to parse response: ${data}`));
+                reject(new Error(`Failed to parse response (HTTP ${statusCode})`));
               }
             } else {
               resolve({ statusCode, data: data as unknown as T });
@@ -111,23 +114,27 @@ export class HomeComApi {
     let result = await this.httpRequest<T>('GET', url, accessToken);
 
     if (result.statusCode === 401 && this.oAuth2Client) {
+      this.debugLog?.('warn', `[API] GET ${path} → 401, attempting token refresh`);
       try {
         await this.refreshToken();
+        this.debugLog?.('info', '[API] Token refresh succeeded after 401');
       } catch (refreshError) {
-        throw new AuthenticationError(
-          `Token refresh failed: ${refreshError instanceof Error ? refreshError.message : String(refreshError)}`
-        );
+        const msg = sanitizeErrorMessage(refreshError instanceof Error ? refreshError.message : String(refreshError));
+        this.debugLog?.('error', `[API] Token refresh failed after 401: ${msg}`);
+        throw new AuthenticationError(`Token refresh failed: ${msg}`);
       }
       accessToken = this.getAccessToken();
       result = await this.httpRequest<T>('GET', url, accessToken);
     }
 
     if (result.statusCode === 401) {
+      this.debugLog?.('error', `[API] GET ${path} → 401 after retry, authentication failed`);
       throw new AuthenticationError(`Authentication failed: ${result.statusCode}`);
     }
 
     if (result.statusCode < 200 || result.statusCode >= 300) {
-      throw new Error(`API request failed: ${result.statusCode} - ${JSON.stringify(result.data)}`);
+      this.debugLog?.('error', `[API] GET ${path} failed: HTTP ${result.statusCode}`);
+      throw new Error(`API request failed: HTTP ${result.statusCode}`);
     }
 
     return result.data;
@@ -140,23 +147,27 @@ export class HomeComApi {
     let result = await this.httpRequest<T>('PUT', url, accessToken, body);
 
     if (result.statusCode === 401 && this.oAuth2Client) {
+      this.debugLog?.('warn', `[API] PUT ${path} → 401, attempting token refresh`);
       try {
         await this.refreshToken();
+        this.debugLog?.('info', '[API] Token refresh succeeded after 401');
       } catch (refreshError) {
-        throw new AuthenticationError(
-          `Token refresh failed: ${refreshError instanceof Error ? refreshError.message : String(refreshError)}`
-        );
+        const msg = sanitizeErrorMessage(refreshError instanceof Error ? refreshError.message : String(refreshError));
+        this.debugLog?.('error', `[API] Token refresh failed after 401: ${msg}`);
+        throw new AuthenticationError(`Token refresh failed: ${msg}`);
       }
       accessToken = this.getAccessToken();
       result = await this.httpRequest<T>('PUT', url, accessToken, body);
     }
 
     if (result.statusCode === 401) {
+      this.debugLog?.('error', `[API] PUT ${path} → 401 after retry, authentication failed`);
       throw new AuthenticationError(`Authentication failed: ${result.statusCode}`);
     }
 
     if (result.statusCode < 200 || result.statusCode >= 300) {
-      throw new Error(`API request failed: ${result.statusCode} - ${JSON.stringify(result.data)}`);
+      this.debugLog?.('error', `[API] PUT ${path} failed: HTTP ${result.statusCode}`);
+      throw new Error(`API request failed: HTTP ${result.statusCode}`);
     }
 
     return result.data;
