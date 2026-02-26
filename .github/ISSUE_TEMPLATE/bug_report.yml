@@ -75,10 +75,20 @@ body:
       required: true
 
   - type: textarea
+    id: diagnostic-log
+    attributes:
+      label: Diagnostic Log
+      description: |
+        Go to the app settings page in Homey, scroll down to "Diagnostic Log" and click "Copy Log". Paste the contents here.
+      render: shell
+    validations:
+      required: false
+
+  - type: textarea
     id: screenshots-logs
     attributes:
-      label: Screenshots / Logs
-      description: If available, add screenshots or error logs from the Homey developer tools.
+      label: Screenshots / Additional Logs
+      description: If available, add screenshots or other relevant logs.
     validations:
       required: false
 
